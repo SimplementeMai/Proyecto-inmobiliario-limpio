@@ -17,4 +17,4 @@
     - [x] Verify: Header is present and functional across routes.
 
 ## Phase 3: Phase Completion
-4. [ ] **Task: Conductor - User Manual Verification 'Core UI Infrastructure' (Protocol in workflow.md)**
+4. [x] **Task: Conductor - User Manual Verification 'Core UI Infrastructure' (Protocol in workflow.md)** [checkpoint: 98fc672]
