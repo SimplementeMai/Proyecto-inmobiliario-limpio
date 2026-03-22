@@ -1,0 +1,184 @@
+{
+  "project": "saas-jetstream",
+  "description": "AI Agent Framework para Laravel 12 + React 19 + Livewire 3",
+  "lastUpdated": "2026-02-17",
+  "categories": {
+    "generic": {
+      "description": "Skills reutilizables en CUALQUIER proyecto",
+      "skills": ["typescript", "tailwind-4", "react-19"]
+    },
+    "architecture": {
+      "description": "Patrones específicos de esta arquitectura",
+      "skills": ["laravel", "laravel-api", "livewire-development", "shadcn"]
+    },
+    "project-specific": {
+      "description": "Únicos para este proyecto SaaS",
+      "skills": ["saas", "saas-app", "saas-resources", "saas-module", "saas-backend-module", "saas-component-refactor", "saas-pr", "saas-changelog", "document-signatures"]
+    },
+    "management": {
+      "description": "Skills de gestión y creación",
+      "skills": ["skill-creator", "skill-registry", "skill-finder"]
+    }
+  },
+  "skills": [
+    {
+      "name": "saas",
+      "description": "Main entry point for SaaS development - quick reference for all components. Triggers on general saas development questions.",
+      "category": "project-specific",
+      "path": "skills/saas/SKILL.md",
+      "scope": ["root"],
+      "auto_invoke": "General saas development questions"
+    },
+    {
+      "name": "saas-app",
+      "description": "Guidelines for Laravel backend development in the app/ directory, emphasizing Eloquent ORM, Sanctum authentication, and PHP 8.3 conventions. Triggers on working on Laravel backend code.",
+      "category": "project-specific",
+      "path": "skills/saas-app/SKILL.md",
+      "scope": ["app"],
+      "auto_invoke": "Working on Laravel backend code"
+    },
+    {
+      "name": "saas-resources",
+      "description": "Convenciones, patrones y dependencias para el frontend de SaaS React usando React 19, Inertia.js, shadcn/ui, Tailwind 4 y su integración con backend Laravel. Triggers on UI SaaS questions, frontend-backend integration.",
+      "category": "project-specific",
+      "path": "skills/saas-resources/SKILL.md",
+      "scope": ["resources"],
+      "auto_invoke": "Preguntas sobre UI SaaS, integración frontend-backend, patrones de permisos."
+    },
+    {
+      "name": "saas-module",
+      "description": "Module creator for saas, generating CRUD interfaces following the users structure. Triggers on creating new modules.",
+      "category": "project-specific",
+      "path": "skills/saas-module/SKILL.md",
+      "scope": ["resources"],
+      "auto_invoke": "Creating new modules"
+    },
+    {
+      "name": "saas-backend-module",
+      "description": "Backend module creator for saas, generating controllers, requests, and models following Laravel conventions. Triggers on creating new backend modules.",
+      "category": "project-specific",
+      "path": "skills/saas-backend-module/SKILL.md",
+      "scope": ["app"],
+      "auto_invoke": "Creating new backend modules"
+    },
+    {
+      "name": "saas-component-refactor",
+      "description": "Refactors existing Laravel controllers to use Actions and API Resources for better architecture, and creates new CRUD components following SaaS patterns. Triggers on refactoring controllers or creating CRUD modules.",
+      "category": "project-specific",
+      "path": "skills/saas-component-refactor/SKILL.md",
+      "scope": ["app", "resources"],
+      "auto_invoke": "Refactoring controllers or creating CRUD modules"
+    },
+    {
+      "name": "saas-pr",
+      "description": "Creates Pull Requests for saas following the project template and conventions. Triggers on creating or reviewing Pull Requests.",
+      "category": "project-specific",
+      "path": "skills/saas-pr/SKILL.md",
+      "scope": ["root"],
+      "auto_invoke": "Creating or reviewing Pull Requests"
+    },
+    {
+      "name": "saas-changelog",
+      "description": "Manages changelog entries for saas components following keepachangelog.com format. Triggers on adding changelog entries or updating CHANGELOG.md.",
+      "category": "project-specific",
+      "path": "skills/saas-changelog/SKILL.md",
+      "scope": ["root", "resources", "app"],
+      "auto_invoke": "Adding changelog entries or updating CHANGELOG.md"
+    },
+    {
+      "name": "document-signatures",
+      "description": "Sistema de firma de documentos PDF con campos configurables para elaborador y responsable. Incluye traits ReportTrait, WithDocumentSignature, y vistas de aprobación.",
+      "category": "project-specific",
+      "path": "skills/document-signatures/README.md",
+      "scope": ["app", "resources"],
+      "auto_invoke": "Working with PDF signatures, report generation"
+    },
+    {
+      "name": "laravel",
+      "description": "Guidelines and workflow for working on Laravel 11 or Laravel 12 applications with Docker Compose/Sail, Inertia, Livewire, Tailwind v4, and Laravel Boost tools. Triggers on working on Laravel backend code.",
+      "category": "architecture",
+      "path": "skills/laravel/SKILL.md",
+      "scope": ["root"],
+      "auto_invoke": "Working on Laravel backend code"
+    },
+    {
+      "name": "laravel-api",
+      "description": "Build production-grade Laravel REST APIs using opinionated architecture patterns. Triggers on 'build a Laravel API', 'create Laravel endpoints', 'add API authentication', 'review Laravel API code'.",
+      "category": "architecture",
+      "path": "skills/laravel-api/SKILL.md",
+      "scope": ["root"],
+      "auto_invoke": "Building, scaffolding, or reviewing Laravel APIs"
+    },
+    {
+      "name": "livewire-development",
+      "description": "Develops reactive Livewire 3 components. Triggers on creating, updating, or modifying Livewire components; working with wire: directives; adding real-time updates.",
+      "category": "architecture",
+      "path": "skills/livewire-development/SKILL.md",
+      "scope": ["root"],
+      "auto_invoke": "Creating or modifying Livewire components, wire: directives"
+    },
+    {
+      "name": "shadcn",
+      "description": "Manages shadcn/ui components installation, customization, and usage in SaaS React. Triggers on adding shadcn components.",
+      "category": "architecture",
+      "path": "skills/shadcn/SKILL.md",
+      "scope": ["root"],
+      "auto_invoke": "Adding shadcn components"
+    },
+    {
+      "name": "typescript",
+      "description": "TypeScript strict patterns and best practices for .ts/.tsx files. Triggers on writing TypeScript types/interfaces.",
+      "category": "generic",
+      "path": "skills/typescript/SKILL.md",
+      "scope": ["root", "ui"],
+      "auto_invoke": "Writing TypeScript types/interfaces"
+    },
+    {
+      "name": "tailwind-4",
+      "description": "Tailwind CSS 4 patterns and best practices for styling with className, variants, and cn(). Triggers on working with Tailwind classes.",
+      "category": "generic",
+      "path": "skills/tailwind-4/SKILL.md",
+      "scope": ["root", "ui"],
+      "auto_invoke": "Working with Tailwind classes"
+    },
+    {
+      "name": "react-19",
+      "description": "React 19 patterns with React Compiler for components and hooks in .tsx files. Triggers on writing React components.",
+      "category": "generic",
+      "path": "skills/react-19/SKILL.md",
+      "scope": ["root", "ui"],
+      "auto_invoke": "Writing React components"
+    },
+    {
+      "name": "skill-creator",
+      "description": "Creates new AI agent skills following the Agent Skills spec. Triggers on creating new skills.",
+      "category": "management",
+      "path": "skills/skill-creator/SKILL.md",
+      "scope": ["root"],
+      "auto_invoke": "Creating new skills"
+    }
+  ],
+  "searchIndex": {
+    "by_trigger": {
+      "backend": ["saas-app", "laravel", "laravel-api", "saas-backend-module"],
+      "frontend": ["saas-resources", "react-19", "tailwind-4", "shadcn", "saas-module"],
+      "api": ["laravel-api", "saas-component-refactor"],
+      "crud": ["saas-module", "saas-backend-module", "saas-component-refactor"],
+      "refactor": ["saas-component-refactor"],
+      "pr": ["saas-pr", "saas-changelog"],
+      "changelog": ["saas-changelog"],
+      "typescript": ["typescript"],
+      "tailwind": ["tailwind-4"],
+      "react": ["react-19", "saas-resources"],
+      "shadcn": ["shadcn"],
+      "livewire": ["livewire-development"],
+      "pdf": ["document-signatures"],
+      "signature": ["document-signatures"]
+    },
+    "by_directory": {
+      "app/": ["saas-app", "laravel", "saas-backend-module"],
+      "resources/js/": ["saas-resources", "react-19", "tailwind-4", "shadcn", "saas-module"],
+      "routes/": ["laravel", "laravel-api"]
+    }
+  }
+}
