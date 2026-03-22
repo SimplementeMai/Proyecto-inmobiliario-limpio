@@ -6,5 +6,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: Search Filters**
   *Link: [./tracks/filtrado_1_10/](./filtrado_1_10/)*
-- [ ] **Track: Home Discover Screen**
+- [~] **Track: Home Discover Screen**
   *Link: [./tracks/home_discover_screen/](./tracks/home_discover_screen/)*
