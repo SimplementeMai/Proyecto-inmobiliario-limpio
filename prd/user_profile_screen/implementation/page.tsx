@@ -10,7 +10,7 @@ export default function UserProfilePage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
           <div className="bg-card p-6 rounded-xl border flex flex-col items-center shadow-sm">
-            <ProfileAvatar src="/user-avatar.jpg" alt="User Profile" />
+            <ProfileAvatar src="/user-avatar.jpg" alt="Profile" />
             <h2 className="mt-4 font-bold text-lg">John Doe</h2>
             <p className="text-muted-foreground text-sm">john.doe@example.com</p>
           </div>
