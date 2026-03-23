@@ -1,15 +1,8 @@
-# Project Tracks
-
-This file tracks all major tracks for the project. Each track has its own detailed plan in its respective folder.
-
----
-
 - [x] **Track: Search Filters**
-  *Link: [./tracks/filtrado_1_10/](./filtrado_1_10/)*
-- [~] **Track: Home Discover Screen**
-  *Link: [./tracks/home_discover_screen/](./tracks/home_discover_screen/)*
+  *Link: [./tracks/search_filters_screen/](./search_filters_screen/)*
+- [x] **Track: Property Details Screen**
+  *Link: [./tracks/property_details_screen/](./property_details_screen/)*
 
----
+- [~] **Track: Add/Edit Property Form**
 
-- [ ] **Track: Primer Track**
-*Link: [./tracks/primerTrack_20260322/](./tracks/primerTrack_20260322/)*
+  *Link: [./tracks/add_edit_property_form/](./add_edit_property_form/)*
