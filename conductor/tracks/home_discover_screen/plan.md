@@ -1,10 +1,11 @@
 # Implementation Plan: Home Discover Screen
 
 ## Phase 1: Core Components
-- [ ] **Task 1: Build Reusable `PropertyCard`**
+- [x] **Task 1: Build Reusable `PropertyCard`**
   - Create `app/components/PropertyCard.tsx`.
   - Use `Card` component with image preview, price, and specs (beds/baths).
   - Verify styling against `prd/home_discover_screen/screen.png`.
+    [Commit: 5b6c0d2]
 - [ ] **Task 2: Build `CategoryBar`**
   - Implement a scrollable row of property types (e.g., Houses, Condos, Apartments).
   - Include hover effects and selection state.
