@@ -2,7 +2,7 @@
 
 ## Active Tracks
 
-- [ ] **Track: Supabase configuration, App Framework connection, and seeding of 30 properties based on PRD research.**
+- [~] **Track: Supabase configuration, App Framework connection, and seeding of 30 properties based on PRD research.**
 *Link: [./tracks/supabase_infra_seed_20260326/](./tracks/supabase_infra_seed_20260326/)*
 
 ---

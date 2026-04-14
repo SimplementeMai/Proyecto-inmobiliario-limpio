@@ -1,5 +1,5 @@
-import { PropertyForm } from "@/app/components/PropertyForm"
-import { ImageUploader } from "@/app/components/ImageUploader"
+import { PropertyForm } from "./PropertyForm"
+import { ImageUploader } from "./ImageUploader"
 
 export default function AddEditPropertyPage() {
   return (

@@ -15,21 +15,21 @@ export default function HomeDiscover() {
       location: 'San Francisco, CA',
       beds: 3,
       baths: 2,
-      imageUrl: '/placeholder-property.jpg',
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDXOQNT51Cz2cPdTVGyr6DA9NmaizRJT_h-GpzTk043U9D4hotjpBSgVzGQJS89IeUQQm02p6F4tIoZA5ly5H32xJSyPNjt6Ru47JtGsLLkxA4g8nr1i8SQL1_DvRvS80MIv_JwWavbMeqZBMWVuWIEhli6Z_iX5Iof9X5fRJ13-FIkx7Olyn43SXE8eWTb1JXrZyT-KKsb8KED9SZM-Hm07NfNn8i2xxoejNDgbf31R4RrRv6f8S4wULTE5k2DByf1GulIeuJYhdU',
     },
     {
       price: 2200000,
       location: 'Los Angeles, CA',
       beds: 4,
       baths: 3,
-      imageUrl: '/placeholder-property.jpg',
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDXOQNT51Cz2cPdTVGyr6DA9NmaizRJT_h-GpzTk043U9D4hotjpBSgVzGQJS89IeUQQm02p6F4tIoZA5ly5H32xJSyPNjt6Ru47JtGsLLkxA4g8nr1i8SQL1_DvRvS80MIv_JwWavbMeqZBMWVuWIEhli6Z_iX5Iof9X5fRJ13-FIkx7Olyn43SXE8eWTb1JXrZyT-KKsb8KED9SZM-Hm07NfNn8i2xxoejNDgbf31R4RrRv6f8S4wULTE5k2DByf1GulIeuJYhdU',
     },
     {
       price: 1800000,
       location: 'Seattle, WA',
       beds: 2,
       baths: 2,
-      imageUrl: '/placeholder-property.jpg',
+      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDXOQNT51Cz2cPdTVGyr6DA9NmaizRJT_h-GpzTk043U9D4hotjpBSgVzGQJS89IeUQQm02p6F4tIoZA5ly5H32xJSyPNjt6Ru47JtGsLLkxA4g8nr1i8SQL1_DvRvS80MIv_JwWavbMeqZBMWVuWIEhli6Z_iX5Iof9X5fRJ13-FIkx7Olyn43SXE8eWTb1JXrZyT-KKsb8KED9SZM-Hm07NfNn8i2xxoejNDgbf31R4RrRv6f8S4wULTE5k2DByf1GulIeuJYhdU',
     }
   ]
 

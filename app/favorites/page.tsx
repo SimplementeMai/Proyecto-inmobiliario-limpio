@@ -1,15 +1,61 @@
-import { FavoritesList } from "@/app/components/FavoritesList"
+"use client";
+
+import { useEffect, useState } from "react";
+import { FavoritesList } from "@/app/components/FavoritesList";
+import { useFavorites } from "@/app/components/FavoriteContext";
+import { createClient } from "@/lib/supabase/client";
+
+interface Property {
+  id: string;
+  title: string;
+  price: number;
+  imageUrl: string;
+}
 
 export default function FavoritesPage() {
-  const favorites = [
-    { title: 'Luxury Apartment', price: 850000, imageUrl: '/prop1.jpg' },
-    { title: 'Modern Villa', price: 1200000, imageUrl: '/prop2.jpg' },
-  ]
+  const { favoriteIds } = useFavorites();
+  const [properties, setProperties] = useState<Property[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchFavorites() {
+      if (favoriteIds.length === 0) {
+        setProperties([]);
+        setLoading(false);
+        return;
+      }
+
+      const supabase = createClient();
+      const { data, error } = await supabase
+        .from('properties')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching favorites:', error.message, error.details, error.hint);
+      } else if (data) {
+        // Filter in memory for debugging
+        const filtered = data.filter(p => favoriteIds.includes(p.slug) || favoriteIds.includes(p.id));
+        console.log('Filtered properties data:', filtered);
+        const formatted = filtered.map(p => ({
+          id: p.slug || p.id,
+          title: p.title || p.address || "Property",
+          price: p.price || 0,
+          imageUrl: (Array.isArray(p.image_urls) && p.image_urls.length > 0) ? p.image_urls[0] : "/placeholder.jpg"
+        }));
+        setProperties(formatted);
+      }
+      setLoading(false);
+    }
+
+    fetchFavorites();
+  }, [favoriteIds]);
+
+  if (loading) return <main className="container mx-auto px-4 py-12 max-w-2xl">Loading...</main>;
 
   return (
     <main className="container mx-auto px-4 py-12 max-w-2xl">
       <h1 className="text-3xl font-bold mb-8">My Favorites</h1>
-      <FavoritesList properties={favorites} />
+      <FavoritesList properties={properties} />
     </main>
-  )
+  );
 }

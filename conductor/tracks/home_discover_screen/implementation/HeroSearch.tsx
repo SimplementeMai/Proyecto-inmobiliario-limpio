@@ -6,7 +6,7 @@ import { Input } from "@/app/components/ui/input"
 export function HeroSearch() {
   return (
     <section className="relative h-[500px] flex items-center justify-center overflow-hidden rounded-3xl bg-muted/20 my-8">
-      <div className="absolute inset-0 bg-[url('/hero-bg.jpg')] bg-cover bg-center opacity-20" />
+      <div className="absolute inset-0 bg-[url('https://lh3.googleusercontent.com/aida-public/AB6AXuCra-FKp81t0_OM8bWD55m2o9OOSnR_v7D0UilyExMImxyIcr9tIMZ2ois2p82ENk')] bg-cover bg-center opacity-20" />
       <div className="relative z-10 w-full max-w-2xl px-6 space-y-6 text-center">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground">
           Find your dream home

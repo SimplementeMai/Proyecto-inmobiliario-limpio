@@ -1,6 +1,6 @@
-import { UserProfileForm } from "@/app/components/UserProfileForm"
-import { SecuritySettings } from "@/app/components/SecuritySettings"
-import { ProfileAvatar } from "@/app/components/ProfileAvatar"
+import { UserProfileForm } from "./UserProfileForm"
+import { SecuritySettings } from "./SecuritySettings"
+import { ProfileAvatar } from "./ProfileAvatar"
 
 export default function UserProfilePage() {
   return (

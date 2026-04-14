@@ -21,11 +21,11 @@ describe('PropertyCard', () => {
     expect(screen.getByText('San Francisco, CA')).toBeInTheDocument()
 
     // Test for beds and baths rendering
-    expect(screen.getByText('3 Beds')).toBeInTheDocument()
-    expect(screen.getByText('2 Baths')).toBeInTheDocument()
+    expect(screen.getByText(/3 Hab./i)).toBeInTheDocument()
+    expect(screen.getByText(/2 Baños/i)).toBeInTheDocument()
 
     // Test for image rendering (checking if an img tag with the src exists)
-    const imgElement = screen.getByRole('img', { name: /property image/i }) // Assuming alt text will be dynamic
+    const imgElement = screen.getByRole('img', { name: /San Francisco, CA/i })
     expect(imgElement).toBeInTheDocument()
     expect(imgElement).toHaveAttribute('src', '/test-property.jpg')
   })

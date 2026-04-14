@@ -4,8 +4,10 @@ import { PropertyTable } from "@/app/components/PropertyTable"
 
 export default function DashboardPage() {
   const properties = [
-    { title: 'The Nordic Villa', location: '12 Willow Creek Ln, Copenhagen', price: 1250000, status: 'Active' as const },
+    { title: 'The Glass Pavilion', location: 'Beverly Hills, CA', price: 5250000, status: 'Active' as const },
+    { title: 'Modern Lakeside Manor', location: 'Willow Creek Rd, Aspen', price: 2100000, status: 'Active' as const },
     { title: 'Sunset Apartments', location: '88 Ocean Blvd, Miami', price: 850000, status: 'Pending' as const },
+    { title: 'Industrial Skyline Loft', location: 'Evergreen Terrace, Seattle', price: 1250000, status: 'Active' as const },
   ]
 
   return (

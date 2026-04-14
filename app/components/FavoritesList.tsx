@@ -3,6 +3,7 @@ import { FavoritePropertyCard } from "./FavoritePropertyCard"
 import { EmptyState } from "./EmptyState"
 
 interface Property {
+  id: string
   title: string
   price: number
   imageUrl: string
@@ -16,7 +17,7 @@ export function FavoritesList({ properties }: { properties: Property[] }) {
   return (
     <div className="grid gap-4">
       {properties.map((property) => (
-        <FavoritePropertyCard key={property.title} property={property} />
+        <FavoritePropertyCard key={property.id} property={property} />
       ))}
     </div>
   )
