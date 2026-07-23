@@ -4,6 +4,9 @@ import { useEffect, useState } from "react";
 import { FavoritesList } from "@/app/components/FavoritesList";
 import { useFavorites } from "@/app/components/FavoriteContext";
 import { createClient } from "@/lib/supabase/client";
+import { Database } from "@/lib/supabase/database.types";
+
+type PropertyRow = Database['public']['Tables']['properties']['Row'];
 
 interface Property {
   id: string;
@@ -31,10 +34,10 @@ export default function FavoritesPage() {
         .select('*');
 
       if (error) {
-        console.error('Error fetching favorites:', error.message, error.details, error.hint);
+        console.error('Error fetching favorites:', error.message);
       } else if (data) {
-        // Filter in memory for debugging
-        const filtered = data.filter(p => favoriteIds.includes(p.slug) || favoriteIds.includes(p.id));
+        // Correct typing: data is PropertyRow[]
+        const filtered = (data as PropertyRow[]).filter(p => favoriteIds.includes(p.slug) || favoriteIds.includes(p.id));
         console.log('Filtered properties data:', filtered);
         const formatted = filtered.map(p => ({
           id: p.slug || p.id,

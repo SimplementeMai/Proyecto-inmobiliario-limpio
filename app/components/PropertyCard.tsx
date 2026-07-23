@@ -9,6 +9,7 @@ import Link from "next/link"
 
 interface Property {
   id: string
+  slug: string
   price: number
   location: string
   beds: number
@@ -40,7 +41,7 @@ export function PropertyCard({ property, isFavorite = false, onToggleFavorite }:
   return (
     // Added a relative div to position the heart icon absolutely
     <div className="relative group"> 
-      <Link href={`/property/${property.id}`} passHref>
+      <Link href={`/property/${property.slug}`} passHref>
         <Card className="overflow-hidden rounded-xl border-none shadow-sm hover:shadow-md transition-shadow cursor-pointer">
           <div className="relative">
             <AspectRatio ratio={4 / 3}>

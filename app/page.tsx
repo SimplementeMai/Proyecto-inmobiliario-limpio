@@ -39,32 +39,33 @@ export default function HomeDiscover() {
   React.useEffect(() => {
     async function fetchProperties() {
       const supabase = createClient();
-      const { data, error } = await supabase.from('properties').select<string, SupabaseProperty>('*');
+      const { data, error } = await supabase.from('properties').select<string, Property>('*');
 
       if (error) {
-        console.error('Error fetching properties:', error);
+        console.error('Error fetching properties:', error.message, error.details, error.hint);
         return;
       }
 
       if (data) {
-        const formattedProperties: Property[] = data.map((prop: SupabaseProperty, index: number) => {
+        const formattedProperties: Property[] = data.map((prop, index: number) => {
           // Simulamos renta si el index es par o el precio es bajo
           const isRent = index % 3 === 0; 
-          let simulatedPrice = prop.price ?? 0;
+          const p = prop as unknown as SupabaseProperty;
+          let simulatedPrice = p.price ?? 0;
           
           if (isRent && simulatedPrice > 10000) {
             simulatedPrice = Math.floor(simulatedPrice / 500); // Convertimos millones a miles para renta
           }
 
           return {
-            id: prop.slug,
+            id: p.slug, // ID para lógica interna (favoritos)
+            slug: p.slug,
             price: simulatedPrice,
-            location: prop.address || prop.location || "Ubicación desconocida",
-            beds: prop.beds ?? 0,
-            baths: prop.baths ?? 0,
-            imageUrl: prop.image_urls?.[0] ?? "/placeholder.jpg",
-            address: prop.address || prop.location,
-            slug: prop.slug,
+            location: p.location ?? "Ubicación no disponible",
+            beds: p.beds ?? 0,
+            baths: p.baths ?? 0,
+            imageUrl: (Array.isArray(p.image_urls) && p.image_urls.length > 0) ? p.image_urls[0] : "/placeholder.jpg",
+            address: p.address,
             type: isRent ? 'rent' : 'sale'
           };
         });
