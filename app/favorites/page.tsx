@@ -10,6 +10,7 @@ type PropertyRow = Database['public']['Tables']['properties']['Row'];
 
 interface Property {
   id: string;
+  slug: string;
   title: string;
   price: number;
   imageUrl: string;
@@ -40,7 +41,8 @@ export default function FavoritesPage() {
         const filtered = (data as PropertyRow[]).filter(p => favoriteIds.includes(p.slug) || favoriteIds.includes(p.id));
         console.log('Filtered properties data:', filtered);
         const formatted = filtered.map(p => ({
-          id: p.slug || p.id,
+          id: p.id,
+          slug: p.slug,
           title: p.title || p.address || "Property",
           price: p.price || 0,
           imageUrl: (Array.isArray(p.image_urls) && p.image_urls.length > 0) ? p.image_urls[0] : "/placeholder.jpg"

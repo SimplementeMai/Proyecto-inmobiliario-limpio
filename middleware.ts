@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from 'next/server'
 import { createServerClient } from '@supabase/ssr'
 
-export async function proxy(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const response = NextResponse.next({
     request: {
       headers: request.headers,
@@ -9,8 +9,8 @@ export async function proxy(request: NextRequest) {
   })
 
   const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY!,
+    process.env.NEXT_PUBLIC_SUPABASE_URL!.replace('/rest/v1/', ''),
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {

@@ -9,6 +9,7 @@ import { useFavorites } from "./FavoriteContext";
 
 interface FavoriteProperty {
   id: string;
+  slug: string;
   title: string;
   price: number;
   imageUrl: string;
@@ -24,7 +25,7 @@ export function FavoritePropertyCard({ property }: { property: FavoriteProperty 
   };
 
   return (
-    <Link href={`/property/${property.id}`}>
+    <Link href={`/property/${property.slug}`}>
       <Card className="flex items-center p-4 gap-4 hover:shadow-md transition-shadow cursor-pointer">
         <img
           src={property.imageUrl}

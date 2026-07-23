@@ -4,6 +4,7 @@ import { EmptyState } from "./EmptyState"
 
 interface Property {
   id: string
+  slug: string
   title: string
   price: number
   imageUrl: string
