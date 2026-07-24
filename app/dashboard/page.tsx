@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/app/components/ui/button"
-import { Building2, Users, Tag, ArrowRightLeft } from "lucide-react"
+import { Users, Tag, ArrowRightLeft } from "lucide-react"
 
 interface Property {
   id: string
@@ -18,12 +18,14 @@ interface Property {
   price: number
   id_estado: number | null
   estado_descripcion: string | null
+  user_id: string | null
 }
 
 export default function DashboardPage() {
   const [properties, setProperties] = React.useState<Property[]>([])
   const [stats, setStats] = React.useState({ total: 0, activas: 0, pendientes: 0 })
   const [loading, setLoading] = React.useState(true)
+  const [userId, setUserId] = React.useState<string | null>(null)
   const router = useRouter()
 
   React.useEffect(() => {
@@ -34,10 +36,12 @@ export default function DashboardPage() {
         router.push("/auth")
         return
       }
+      setUserId(user.id)
 
       const { data: propertiesData } = await supabase
         .from('properties')
-        .select('id, slug, title, address, price, id_estado, estados(id_estado, descripcion)')
+        .select('id, slug, title, address, price, id_estado, estados(id_estado, descripcion), user_id')
+        .or(`user_id.is.null,user_id.eq.${user.id}`)
 
       if (propertiesData) {
         const formatted = propertiesData.map((p: any) => ({
@@ -48,6 +52,7 @@ export default function DashboardPage() {
           price: p.price,
           id_estado: p.id_estado,
           estado_descripcion: p.estados?.descripcion || null,
+          user_id: p.user_id,
         }))
         setProperties(formatted)
 
@@ -79,27 +84,27 @@ export default function DashboardPage() {
       <div className="flex flex-wrap gap-3 mb-8">
         <Link href="/dashboard/agentes">
           <Button variant="outline" className="gap-2">
-            <Users className="h-4 w-4" /> Agentes <ArrowRightLeft className="h-3 w-3" />
+            <Users className="h-4 w-4" /> Agentes
           </Button>
         </Link>
         <Link href="/dashboard/clientes">
           <Button variant="outline" className="gap-2">
-            <Users className="h-4 w-4" /> Clientes <ArrowRightLeft className="h-3 w-3" />
+            <Users className="h-4 w-4" /> Clientes
           </Button>
         </Link>
         <Link href="/dashboard/estados">
           <Button variant="outline" className="gap-2">
-            <Tag className="h-4 w-4" /> Estados <ArrowRightLeft className="h-3 w-3" />
+            <Tag className="h-4 w-4" /> Estados
           </Button>
         </Link>
         <Link href="/dashboard/transacciones">
           <Button variant="outline" className="gap-2">
-            <ArrowRightLeft className="h-4 w-4" /> Transacciones <ArrowRightLeft className="h-3 w-3" />
+            <ArrowRightLeft className="h-4 w-4" /> Transacciones
           </Button>
         </Link>
       </div>
 
-      <PropertyTable properties={properties} />
+      <PropertyTable properties={properties} userId={userId} />
     </main>
   )
 }

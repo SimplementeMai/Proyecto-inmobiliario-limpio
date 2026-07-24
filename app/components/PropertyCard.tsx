@@ -10,6 +10,7 @@ import Link from "next/link"
 interface Property {
   id: string
   slug: string
+  title?: string
   price: number
   location: string
   beds: number

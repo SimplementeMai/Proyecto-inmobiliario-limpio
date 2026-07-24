@@ -26,6 +26,8 @@ export interface Database {
           image_urls: string[] | null
           created_at: string
           id_agente: number | null
+          user_id: string | null
+          id_estado: number | null
         }
         Insert: {
           id?: string
@@ -43,6 +45,8 @@ export interface Database {
           image_urls?: string[] | null
           created_at?: string
           id_agente?: number | null
+          user_id?: string | null
+          id_estado?: number | null
         }
         Update: {
           id?: string
@@ -60,6 +64,8 @@ export interface Database {
           image_urls?: string[] | null
           created_at?: string
           id_agente?: number | null
+          user_id?: string | null
+          id_estado?: number | null
         }
         Relationships: [
           {

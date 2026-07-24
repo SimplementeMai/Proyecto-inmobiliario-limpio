@@ -24,9 +24,8 @@ import { User as SupabaseUser } from "@supabase/supabase-js"
 
 const navLinks = [
   { href: "/", label: "Inicio" },
-  { href: "/coming-soon", label: "Comprar" },
-  { href: "/coming-soon", label: "Rentar" },
-  { href: "/coming-soon", label: "Vender" },
+  { href: "/comprar", label: "Comprar" },
+  { href: "/rentar", label: "Rentar" },
   { href: "/favorites", label: "Favoritos" },
   { href: "/dashboard", label: "Mi Portafolio" },
 ]

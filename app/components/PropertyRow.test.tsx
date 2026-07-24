@@ -11,6 +11,7 @@ describe('PropertyRow', () => {
     price: 1250000,
     id_estado: 1,
     estado_descripcion: 'Activo',
+    user_id: null,
   }
 
   it('renders property row details correctly', () => {

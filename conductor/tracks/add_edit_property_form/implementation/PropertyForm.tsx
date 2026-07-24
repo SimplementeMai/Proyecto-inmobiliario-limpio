@@ -7,12 +7,12 @@ import * as z from "zod"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
 import { createClient } from "@/lib/supabase/client"
-import { Loader2 } from "lucide-react"
+import { Loader2, Upload, X } from "lucide-react"
 
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  slug: z.string().min(1, "Slug is required").regex(/^[a-z0-9-]+$/, "Slug must be lowercase with hyphens only"),
-  price: z.string().min(1, "Price is required"),
+  title: z.string().min(1, "El título es obligatorio"),
+  slug: z.string().min(1, "El slug es obligatorio").regex(/^[a-z0-9-]+$/, "Solo minúsculas, números y guiones"),
+  price: z.string().min(1, "El precio es obligatorio"),
   description: z.string().optional(),
   address: z.string().optional(),
   beds: z.string().optional(),
@@ -31,13 +31,17 @@ interface PropertyFormProps {
     beds: number | null
     baths: number | null
     sqft: number | null
+    image_urls: string[] | null
   }
+  onSaved?: () => void
 }
 
-export function PropertyForm({ propertyId, initialData }: PropertyFormProps) {
+export function PropertyForm({ propertyId, initialData, onSaved }: PropertyFormProps) {
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
   const [success, setSuccess] = React.useState(false)
+  const [imageUrls, setImageUrls] = React.useState<string[]>(initialData?.image_urls || [])
+  const [newImageUrl, setNewImageUrl] = React.useState("")
 
   const {
     register,
@@ -57,12 +61,25 @@ export function PropertyForm({ propertyId, initialData }: PropertyFormProps) {
     } : undefined,
   })
 
+  function addImageUrl() {
+    const url = newImageUrl.trim()
+    if (url && !imageUrls.includes(url)) {
+      setImageUrls([...imageUrls, url])
+      setNewImageUrl("")
+    }
+  }
+
+  function removeImageUrl(index: number) {
+    setImageUrls(imageUrls.filter((_, i) => i !== index))
+  }
+
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
     setIsLoading(true)
     setError(null)
     setSuccess(false)
 
     const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
 
     const propertyData = {
       title: data.title,
@@ -73,6 +90,8 @@ export function PropertyForm({ propertyId, initialData }: PropertyFormProps) {
       beds: data.beds ? Number(data.beds) : null,
       baths: data.baths ? Number(data.baths) : null,
       sqft: data.sqft ? Number(data.sqft) : null,
+      image_urls: imageUrls.length > 0 ? imageUrls : null,
+      ...(user ? { user_id: user.id } : {}),
     }
 
     let result
@@ -86,6 +105,9 @@ export function PropertyForm({ propertyId, initialData }: PropertyFormProps) {
       setError(result.error.message)
     } else {
       setSuccess(true)
+      if (onSaved) {
+        setTimeout(() => onSaved(), 800)
+      }
     }
     setIsLoading(false)
   }
@@ -93,34 +115,63 @@ export function PropertyForm({ propertyId, initialData }: PropertyFormProps) {
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
       <div>
-        <Input placeholder="Property title" {...register("title")} />
+        <Input placeholder="Título de la propiedad" {...register("title")} />
         {errors.title && <p className="text-destructive text-sm mt-1">{errors.title.message as string}</p>}
       </div>
       <div>
-        <Input placeholder="property-slug-url" {...register("slug")} />
+        <Input placeholder="slug-url-propiedad" {...register("slug")} />
         {errors.slug && <p className="text-destructive text-sm mt-1">{errors.slug.message as string}</p>}
       </div>
       <div>
-        <Input placeholder="Price" type="number" {...register("price")} />
+        <Input placeholder="Precio" type="number" {...register("price")} />
         {errors.price && <p className="text-destructive text-sm mt-1">{errors.price.message as string}</p>}
       </div>
       <div>
-        <Input placeholder="Description" {...register("description")} />
+        <Input placeholder="Descripción" {...register("description")} />
       </div>
       <div>
-        <Input placeholder="Address" {...register("address")} />
+        <Input placeholder="Dirección" {...register("address")} />
       </div>
       <div className="grid grid-cols-3 gap-4">
         <div>
-          <Input placeholder="Beds" type="number" {...register("beds")} />
+          <Input placeholder="Recámaras" type="number" {...register("beds")} />
         </div>
         <div>
-          <Input placeholder="Baths" type="number" {...register("baths")} />
+          <Input placeholder="Baños" type="number" {...register("baths")} />
         </div>
         <div>
-          <Input placeholder="Sqft" type="number" {...register("sqft")} />
+          <Input placeholder="Área (m²)" type="number" {...register("sqft")} />
         </div>
       </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium">Imágenes (URLs)</label>
+        <div className="flex gap-2">
+          <Input
+            placeholder="https://ejemplo.com/imagen.jpg"
+            value={newImageUrl}
+            onChange={e => setNewImageUrl(e.target.value)}
+            onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addImageUrl() } }}
+          />
+          <Button type="button" variant="outline" onClick={addImageUrl}>
+            <Upload className="h-4 w-4" />
+          </Button>
+        </div>
+        {imageUrls.length > 0 && (
+          <div className="space-y-2">
+            {imageUrls.map((url, i) => (
+              <div key={i} className="flex items-center gap-2 text-sm">
+                <img src={url} alt="" className="h-10 w-10 rounded object-cover" />
+                <span className="truncate flex-1 text-muted-foreground">{url}</span>
+                <Button type="button" variant="ghost" size="sm" onClick={() => removeImageUrl(i)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
       {error && <p className="text-destructive text-sm">{error}</p>}
       {success && <p className="text-green-600 text-sm">Propiedad guardada correctamente.</p>}
       <Button type="submit" disabled={isLoading}>

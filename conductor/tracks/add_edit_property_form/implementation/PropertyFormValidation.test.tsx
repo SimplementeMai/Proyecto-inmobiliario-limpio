@@ -10,7 +10,7 @@ describe('PropertyForm Validation', () => {
     fireEvent.click(submitBtn)
     
     await waitFor(() => {
-      expect(screen.getByText(/title is required/i)).toBeInTheDocument()
+      expect(screen.getByText(/el título es obligatorio/i)).toBeInTheDocument()
     })
   })
 })

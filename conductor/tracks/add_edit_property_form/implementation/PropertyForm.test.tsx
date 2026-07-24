@@ -6,8 +6,8 @@ describe('PropertyForm', () => {
   it('renders essential form fields', () => {
     render(<PropertyForm />)
     
-    expect(screen.getByPlaceholderText(/property title/i)).toBeInTheDocument()
-    expect(screen.getByPlaceholderText(/price/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/título de la propiedad/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/precio/i)).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /crear propiedad/i })).toBeInTheDocument()
   })
 })
