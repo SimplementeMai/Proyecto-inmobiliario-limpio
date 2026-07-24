@@ -1,12 +1,12 @@
 -- 1. Modificar Clientes para enlazar con auth.users
-ALTER TABLE public.Clientes ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id);
+ALTER TABLE public.clientes ADD COLUMN IF NOT EXISTS user_id UUID REFERENCES auth.users(id);
 
 -- 2. Crear función de trigger
 -- Esta función se ejecutará automáticamente tras el registro
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
-  INSERT INTO public.Clientes (nombre, email, user_id)
+  INSERT INTO public.clientes (nombre, email, user_id)
   VALUES (
     COALESCE(new.raw_user_meta_data->>'full_name', 'Usuario Nuevo'), 
     new.email,

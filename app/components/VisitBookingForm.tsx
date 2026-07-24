@@ -40,7 +40,7 @@ export function VisitBookingForm({ propertyId }: { propertyId: string }) {
     }
 
     const { data: cliente } = await supabase
-      .from('Clientes')
+      .from('clientes')
       .select('id_cliente')
       .eq('user_id', user.id)
       .single()
@@ -64,12 +64,12 @@ export function VisitBookingForm({ propertyId }: { propertyId: string }) {
     }
 
     const { data: estado } = await supabase
-      .from('Estados')
+      .from('estados')
       .select('id_estado')
       .ilike('descripcion', '%pendiente%')
       .single()
 
-    const { error: insertError } = await supabase.from('Transacciones').insert({
+    const { error: insertError } = await supabase.from('transacciones').insert({
       id_propiedad: property.id,
       id_cliente: cliente.id_cliente,
       id_estado: estado?.id_estado || null,

@@ -24,7 +24,7 @@ export function FavoriteProvider({ children }: { children: React.ReactNode }) {
       if (user) {
         setUserId(user.id)
         const { data } = await supabase
-          .from('Favoritos')
+          .from('favoritos')
           .select('id_propiedad')
           .eq('id_user', user.id)
 
@@ -61,16 +61,25 @@ export function FavoriteProvider({ children }: { children: React.ReactNode }) {
 
     if (userId) {
       const supabase = createClient()
+      let error = null
       if (isCurrentlyFavorite) {
-        await supabase
-          .from('Favoritos')
+        const result = await supabase
+          .from('favoritos')
           .delete()
           .eq('id_user', userId)
           .eq('id_propiedad', id)
+        error = result.error
       } else {
-        await supabase
-          .from('Favoritos')
+        const result = await supabase
+          .from('favoritos')
           .insert({ id_user: userId, id_propiedad: id })
+        error = result.error
+      }
+      if (error) {
+        setFavoriteIds((prev) =>
+          isCurrentlyFavorite ? [...prev, id] : prev.filter((fav) => fav !== id)
+        )
+        console.error('Error updating favorite:', error.message)
       }
     }
   };

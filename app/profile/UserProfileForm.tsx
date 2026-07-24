@@ -57,7 +57,7 @@ export function UserProfileForm({ user, cliente, onRefresh }: UserProfileFormPro
 
     if (cliente) {
       const { error: dbError } = await supabase
-        .from('Clientes')
+        .from('clientes')
         .update({ nombre: data.fullName, email: data.email })
         .eq('id_cliente', cliente.id_cliente)
 

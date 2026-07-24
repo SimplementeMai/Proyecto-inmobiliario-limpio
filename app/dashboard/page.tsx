@@ -6,6 +6,9 @@ import { DashboardHeader } from "@/app/components/DashboardHeader"
 import { PropertyTable } from "@/app/components/PropertyTable"
 import { createClient } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
+import Link from "next/link"
+import { Button } from "@/app/components/ui/button"
+import { Building2, Users, Tag, ArrowRightLeft } from "lucide-react"
 
 interface Property {
   id: string
@@ -34,7 +37,7 @@ export default function DashboardPage() {
 
       const { data: propertiesData } = await supabase
         .from('properties')
-        .select('id, slug, title, address, price, id_estado, Estados(id_estado, descripcion)')
+        .select('id, slug, title, address, price, id_estado, estados(id_estado, descripcion)')
 
       if (propertiesData) {
         const formatted = propertiesData.map((p: any) => ({
@@ -44,7 +47,7 @@ export default function DashboardPage() {
           address: p.address,
           price: p.price,
           id_estado: p.id_estado,
-          estado_descripcion: p.Estados?.descripcion || null,
+          estado_descripcion: p.estados?.descripcion || null,
         }))
         setProperties(formatted)
 
@@ -71,6 +74,29 @@ export default function DashboardPage() {
         <StatCard title="Total Listings" value={stats.total.toString()} icon="apartment" />
         <StatCard title="Active Properties" value={stats.activas.toString()} icon="check_circle" />
         <StatCard title="Pending Sale" value={stats.pendientes.toString()} icon="pending" />
+      </div>
+
+      <div className="flex flex-wrap gap-3 mb-8">
+        <Link href="/dashboard/agentes">
+          <Button variant="outline" className="gap-2">
+            <Users className="h-4 w-4" /> Agentes <ArrowRightLeft className="h-3 w-3" />
+          </Button>
+        </Link>
+        <Link href="/dashboard/clientes">
+          <Button variant="outline" className="gap-2">
+            <Users className="h-4 w-4" /> Clientes <ArrowRightLeft className="h-3 w-3" />
+          </Button>
+        </Link>
+        <Link href="/dashboard/estados">
+          <Button variant="outline" className="gap-2">
+            <Tag className="h-4 w-4" /> Estados <ArrowRightLeft className="h-3 w-3" />
+          </Button>
+        </Link>
+        <Link href="/dashboard/transacciones">
+          <Button variant="outline" className="gap-2">
+            <ArrowRightLeft className="h-4 w-4" /> Transacciones <ArrowRightLeft className="h-3 w-3" />
+          </Button>
+        </Link>
       </div>
 
       <PropertyTable properties={properties} />

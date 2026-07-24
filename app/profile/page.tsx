@@ -30,7 +30,7 @@ export default function UserProfilePage() {
       } else {
         setUser(user)
         const { data: clienteData } = await supabase
-          .from('Clientes')
+          .from('clientes')
           .select('*')
           .eq('user_id', user.id)
           .single()
@@ -61,7 +61,7 @@ export default function UserProfilePage() {
             <h2 className="text-xl font-bold mb-6">Información Personal</h2>
             <UserProfileForm user={user} cliente={cliente} onRefresh={async () => {
               if (user) {
-                const { data } = await supabase.from('Clientes').select('*').eq('user_id', user.id).single()
+                const { data } = await supabase.from('clientes').select('*').eq('user_id', user.id).single()
                 setCliente(data)
               }
             }} />

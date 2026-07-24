@@ -29,7 +29,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
   let agent = null
   if (property.id_agente) {
     const { data: agentData } = await supabase
-      .from('Agentes')
+      .from('agentes')
       .select('nombre, telefono')
       .eq('id_agente', property.id_agente)
       .single()

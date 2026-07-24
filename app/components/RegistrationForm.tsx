@@ -43,11 +43,6 @@ export function RegistrationForm() {
       setError(error.message)
       setIsLoading(false)
     } else if (authData.user) {
-      await supabase.from('Clientes').insert({
-        nombre: data.fullName,
-        email: data.email,
-        user_id: authData.user.id,
-      })
       router.push("/dashboard")
       router.refresh()
     }

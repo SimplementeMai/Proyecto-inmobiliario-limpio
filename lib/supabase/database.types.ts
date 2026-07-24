@@ -66,30 +66,30 @@ export interface Database {
             foreignKeyName: "properties_id_agente_fkey"
             columns: ["id_agente"]
             isOneToOne: false
-            referencedRelation: "Agentes"
+            referencedRelation: "agentes"
             referencedColumns: ["id_agente"]
           }
         ]
       }
-      Agentes: {
+      agentes: {
         Row: { id_agente: number; nombre: string; telefono: string | null }
         Insert: { id_agente?: number; nombre: string; telefono?: string | null }
         Update: { id_agente?: number; nombre?: string; telefono?: string | null }
         Relationships: []
       }
-      Clientes: {
+      clientes: {
         Row: { id_cliente: number; nombre: string; email: string; user_id: string | null }
         Insert: { id_cliente?: number; nombre: string; email: string; user_id?: string | null }
         Update: { id_cliente?: number; nombre?: string; email?: string; user_id?: string | null }
         Relationships: []
       }
-      Estados: {
+      estados: {
         Row: { id_estado: number; descripcion: string }
         Insert: { id_estado?: number; descripcion: string }
         Update: { id_estado?: number; descripcion?: string }
         Relationships: []
       }
-      Transacciones: {
+      transacciones: {
         Row: { id_transaccion: number; id_propiedad: string | null; id_cliente: number | null; id_estado: number | null; fecha: string }
         Insert: { id_transaccion?: number; id_propiedad?: string | null; id_cliente?: number | null; id_estado?: number | null; fecha?: string }
         Update: { id_transaccion?: number; id_propiedad?: string | null; id_cliente?: number | null; id_estado?: number | null; fecha?: string }
@@ -105,19 +105,19 @@ export interface Database {
             foreignKeyName: "Transacciones_id_cliente_fkey"
             columns: ["id_cliente"]
             isOneToOne: false
-            referencedRelation: "Clientes"
+            referencedRelation: "clientes"
             referencedColumns: ["id_cliente"]
           },
           {
             foreignKeyName: "Transacciones_id_estado_fkey"
             columns: ["id_estado"]
             isOneToOne: false
-            referencedRelation: "Estados"
+            referencedRelation: "estados"
             referencedColumns: ["id_estado"]
           }
         ]
       }
-      Favoritos: {
+      favoritos: {
         Row: { id_user: string; id_propiedad: string; created_at: string }
         Insert: { id_user: string; id_propiedad: string; created_at?: string }
         Update: { id_user?: string; id_propiedad?: string; created_at?: string }
