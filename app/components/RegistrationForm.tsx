@@ -7,8 +7,7 @@ import * as z from "zod"
 import { useRouter } from "next/navigation"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
-import { createClient } from "@/lib/supabase/client"
-import { Loader2 } from "lucide-react"
+import { Loader2, Eye, EyeOff } from "lucide-react"
 
 const registerSchema = z.object({
   fullName: z.string().min(1, "El nombre completo es obligatorio"),
@@ -19,6 +18,8 @@ const registerSchema = z.object({
 export function RegistrationForm() {
   const [isLoading, setIsLoading] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
+  const [success, setSuccess] = React.useState(false)
+  const [showPassword, setShowPassword] = React.useState(false)
   const router = useRouter()
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(registerSchema),
@@ -27,25 +28,36 @@ export function RegistrationForm() {
   const onSubmit = async (data: z.infer<typeof registerSchema>) => {
     setIsLoading(true)
     setError(null)
-    const supabase = createClient()
-    
-    const { data: authData, error } = await supabase.auth.signUp({
-      email: data.email,
-      password: data.password,
-      options: {
-        data: {
-          full_name: data.fullName,
-        },
-      },
+
+    const res = await fetch('/api/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: data.email,
+        password: data.password,
+        fullName: data.fullName,
+      }),
     })
 
-    if (error) {
-      setError(error.message)
+    const result = await res.json()
+
+    if (!res.ok) {
+      setError(result.error || 'Error al registrar')
       setIsLoading(false)
-    } else if (authData.user) {
-      router.push("/dashboard")
-      router.refresh()
+    } else {
+      setIsLoading(false)
+      setSuccess(true)
     }
+  }
+
+  if (success) {
+    return (
+      <div className="text-center space-y-4">
+        <p className="text-green-600 font-medium">Cuenta creada correctamente.</p>
+        <p className="text-sm text-muted-foreground">Ya puedes iniciar sesión con tu correo y contraseña.</p>
+        <Button variant="outline" onClick={() => router.push("/auth")}>Ir a Iniciar Sesión</Button>
+      </div>
+    )
   }
 
   return (
@@ -58,8 +70,15 @@ export function RegistrationForm() {
         <Input placeholder="Email" {...register("email")} />
         {errors.email && <p className="text-destructive text-sm mt-1">{errors.email.message as string}</p>}
       </div>
-      <div>
-        <Input type="password" placeholder="Contraseña" {...register("password")} />
+      <div className="relative">
+        <Input type={showPassword ? "text" : "password"} placeholder="Contraseña" {...register("password")} className="pr-10" />
+        <button
+          type="button"
+          className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+        </button>
         {errors.password && <p className="text-destructive text-sm mt-1">{errors.password.message as string}</p>}
       </div>
       {error && <p className="text-destructive text-sm">{error}</p>}

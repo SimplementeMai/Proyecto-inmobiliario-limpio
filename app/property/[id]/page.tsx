@@ -7,6 +7,9 @@ import { AboutHome } from "@/app/components/AboutHome"
 import { BuyRentButton } from "@/app/components/BuyRentButton"
 import { EditPropertyButton } from "@/app/components/EditPropertyButton"
 import { notFound } from "next/navigation"
+import Link from "next/link"
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/app/components/ui/button"
 
 export default async function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
@@ -48,6 +51,12 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
 
   return (
     <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <Link href="/">
+        <Button variant="ghost" className="mb-6 -ml-2 gap-2">
+          <ArrowLeft className="h-4 w-4" />
+          Volver
+        </Button>
+      </Link>
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
         <div className="lg:col-span-8 space-y-8">
           {property.image_urls && property.image_urls.length > 0 && (
