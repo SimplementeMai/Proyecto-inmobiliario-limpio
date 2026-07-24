@@ -29,11 +29,28 @@ export default function UserProfilePage() {
         router.push("/auth")
       } else {
         setUser(user)
-        const { data: clienteData } = await supabase
+
+        let { data: clienteData } = await supabase
           .from('clientes')
           .select('*')
           .eq('user_id', user.id)
-          .single()
+          .maybeSingle()
+
+        // Si no existe registro en clientes, crearlo
+        if (!clienteData) {
+          const { data: newCliente } = await supabase
+            .from('clientes')
+            .insert({
+              nombre: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
+              email: user.email || '',
+              user_id: user.id,
+              password: '',
+            })
+            .select('*')
+            .single()
+          clienteData = newCliente
+        }
+
         setCliente(clienteData)
       }
       setLoading(false)
@@ -61,7 +78,7 @@ export default function UserProfilePage() {
             <h2 className="text-xl font-bold mb-6">Información Personal</h2>
             <UserProfileForm user={user} cliente={cliente} onRefresh={async () => {
               if (user) {
-                const { data } = await supabase.from('clientes').select('*').eq('user_id', user.id).single()
+                const { data } = await supabase.from('clientes').select('*').eq('user_id', user.id).maybeSingle()
                 setCliente(data)
               }
             }} />

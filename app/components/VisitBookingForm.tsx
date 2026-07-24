@@ -39,11 +39,25 @@ export function VisitBookingForm({ propertyId }: { propertyId: string }) {
       return
     }
 
-    const { data: cliente } = await supabase
+    let { data: cliente } = await supabase
       .from('clientes')
       .select('id_cliente')
       .eq('user_id', user.id)
-      .single()
+      .maybeSingle()
+
+    if (!cliente) {
+      const { data: newCliente } = await supabase
+        .from('clientes')
+        .insert({
+          nombre: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
+          email: user.email || '',
+          user_id: user.id,
+          password: '',
+        })
+        .select('id_cliente')
+        .single()
+      cliente = newCliente
+    }
 
     if (!cliente) {
       setError("No se encontró tu perfil de cliente.")

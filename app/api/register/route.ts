@@ -71,6 +71,7 @@ export async function POST(request: Request) {
         nombre: fullName,
         email: email,
         user_id: user.id,
+        password: '',
       })
       if (insertErr) {
         console.error('Error inserting cliente:', insertErr.message)
