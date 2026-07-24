@@ -5,6 +5,7 @@ import { PropertyFeatures } from "@/app/components/PropertyFeatures"
 import { AgentContact } from "@/app/components/AgentContact"
 import { AboutHome } from "@/app/components/AboutHome"
 import { BuyRentButton } from "@/app/components/BuyRentButton"
+import { EditPropertyButton } from "@/app/components/EditPropertyButton"
 import { notFound } from "next/navigation"
 
 export default async function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
@@ -68,6 +69,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
           />
         </div>
         <div className="lg:col-span-4 space-y-6">
+          <EditPropertyButton propertyId={property.id} propertyUserId={property.user_id} />
           <BuyRentButton propertyId={property.id} propertyUserId={property.user_id} />
           <AgentContact agent={agent} propertySlug={id} />
         </div>
