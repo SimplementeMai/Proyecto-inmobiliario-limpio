@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { Search, Bell, Menu, HelpCircle, LogOut, User } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
@@ -31,7 +32,7 @@ const navLinks = [
 ]
 
 export function Header() {
-  const [activeLink, setActiveLink] = React.useState("Inicio")
+  const pathname = usePathname()
   const [user, setUser] = React.useState<SupabaseUser | null>(null)
   const supabase = createClient()
 
@@ -86,22 +87,24 @@ export function Header() {
         <div className="hidden lg:flex flex-1 items-center justify-center">
           <NavigationMenu>
             <NavigationMenuList className="gap-2">
-              {navLinks.map((link) => (
-                <NavigationMenuItem key={link.label}>
-                  <NavigationMenuLink
-                    href={link.href}
-                    onClick={() => setActiveLink(link.label)}
-                    className={cn(
-                      "group relative px-4 py-2 text-sm font-bold transition-all rounded-lg hover:bg-primary/5",
-                      activeLink === link.label
-                        ? "text-primary bg-primary/5"
-                        : "text-muted-foreground hover:text-foreground"
-                    )}
-                  >
-                    {link.label}
-                  </NavigationMenuLink>
-                </NavigationMenuItem>
-              ))}
+              {navLinks.map((link) => {
+                const isActive = pathname === link.href
+                return (
+                  <NavigationMenuItem key={link.label}>
+                    <NavigationMenuLink
+                      href={link.href}
+                      className={cn(
+                        "group relative px-4 py-2 text-sm font-bold transition-all rounded-lg",
+                        isActive
+                          ? "text-primary bg-primary/10 shadow-sm shadow-primary/10"
+                          : "text-muted-foreground hover:text-foreground hover:bg-primary/5"
+                      )}
+                    >
+                      {link.label}
+                    </NavigationMenuLink>
+                  </NavigationMenuItem>
+                )
+              })}
             </NavigationMenuList>
           </NavigationMenu>
         </div>
@@ -140,15 +143,23 @@ export function Header() {
             </SheetTrigger>
             <SheetContent side="right" className="w-[300px] sm:w-[400px]">
               <div className="mt-8 flex flex-col gap-4">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className="text-lg font-bold text-muted-foreground hover:text-primary p-2"
-                  >
-                    {link.label}
-                  </Link>
-                ))}
+                {navLinks.map((link) => {
+                  const isActive = pathname === link.href
+                  return (
+                    <Link
+                      key={link.label}
+                      href={link.href}
+                      className={cn(
+                        "text-lg font-bold p-2 rounded-lg transition-all",
+                        isActive
+                          ? "text-primary bg-primary/10"
+                          : "text-muted-foreground hover:text-foreground hover:bg-primary/5"
+                      )}
+                    >
+                      {link.label}
+                    </Link>
+                  )
+                })}
               </div>
             </SheetContent>
           </Sheet>

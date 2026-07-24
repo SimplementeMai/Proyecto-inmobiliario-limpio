@@ -15,12 +15,14 @@ interface Property {
   baths: number;
   imageUrl: string;
   slug: string;
+  title?: string;
   type: 'sale' | 'rent';
 }
 
 interface SupabaseProperty {
   id: string;
   slug: string;
+  title: string | null;
   price: number | null;
   address: string | null;
   beds: number | null;
@@ -50,6 +52,7 @@ export default function HomeDiscover() {
           return {
             id: p.id,
             slug: p.slug,
+            title: p.title ?? undefined,
             price: p.price ?? 0,
             location: p.address ?? "Ubicación no disponible",
             beds: p.beds ?? 0,

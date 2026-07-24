@@ -90,7 +90,10 @@ export function VisitBookingForm({ propertyId }: { propertyId: string }) {
     return (
       <div className="text-center space-y-4">
         <p className="text-green-600 font-medium">Visita agendada correctamente.</p>
-        <Button variant="outline" onClick={() => router.push("/")}>Volver al inicio</Button>
+        <div className="flex gap-3 justify-center">
+          <Button variant="outline" onClick={() => router.back()}>Volver a la propiedad</Button>
+          <Button variant="outline" onClick={() => router.push("/")}>Volver al inicio</Button>
+        </div>
       </div>
     )
   }

@@ -58,8 +58,9 @@ export function PropertyCard({ property, isFavorite = false, onToggleFavorite }:
               </Badge>
             </div>
           </div>
-          <CardContent className="p-4 space-y-2">
-            <div className="text-xl font-bold">{formattedPrice}</div>
+          <CardContent className="p-4 space-y-1">
+            {property.title && <div className="text-base font-bold truncate">{property.title}</div>}
+            <div className="text-lg font-bold text-primary">{formattedPrice}</div>
             <div className="text-sm text-muted-foreground truncate">{property.location}</div>
             <div className="flex gap-4 text-sm font-semibold text-foreground pt-2">
               <div className="flex items-center gap-1">
