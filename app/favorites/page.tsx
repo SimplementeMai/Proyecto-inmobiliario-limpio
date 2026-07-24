@@ -39,7 +39,6 @@ export default function FavoritesPage() {
       } else if (data) {
         // Correct typing: data is PropertyRow[]
         const filtered = (data as PropertyRow[]).filter(p => favoriteIds.includes(p.slug) || favoriteIds.includes(p.id));
-        console.log('Filtered properties data:', filtered);
         const formatted = filtered.map(p => ({
           id: p.id,
           slug: p.slug,

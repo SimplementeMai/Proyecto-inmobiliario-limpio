@@ -6,9 +6,9 @@ describe('RegistrationForm', () => {
   it('renders registration fields', () => {
     render(<RegistrationForm />)
     
-    expect(screen.getByPlaceholderText(/full name/i)).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/nombre completo/i)).toBeInTheDocument()
     expect(screen.getByPlaceholderText(/email/i)).toBeInTheDocument()
-    expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /register/i })).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/contraseña/i)).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /registrarse/i })).toBeInTheDocument()
   })
 })

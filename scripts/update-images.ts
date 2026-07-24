@@ -1,8 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 
-// Configura estas variables con tus valores reales desde .env.local
-const supabaseUrl = 'https://jvrnxubbohqtpqjlopkk.supabase.co';
-const supabaseKey = 'sbp_2f475b7aa3773d1fbc89e14a36de065c52f05919'; 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.replace('/rest/v1/', '') ?? '';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '';
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 

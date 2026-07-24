@@ -14,16 +14,14 @@ interface Property {
   beds: number;
   baths: number;
   imageUrl: string;
-  address: string | null;
   slug: string;
   type: 'sale' | 'rent';
 }
 
 interface SupabaseProperty {
-  id: number;
+  id: string;
   slug: string;
   price: number | null;
-  location: string | null;
   address: string | null;
   beds: number | null;
   baths: number | null;
@@ -39,7 +37,7 @@ export default function HomeDiscover() {
   React.useEffect(() => {
     async function fetchProperties() {
       const supabase = createClient();
-      const { data, error } = await supabase.from('properties').select<string, Property>('*');
+      const { data, error } = await supabase.from('properties').select('*');
 
       if (error) {
         console.error('Error fetching properties:', error.message, error.details, error.hint);
@@ -47,26 +45,17 @@ export default function HomeDiscover() {
       }
 
       if (data) {
-        const formattedProperties: Property[] = data.map((prop, index: number) => {
-          // Simulamos renta si el index es par o el precio es bajo
-          const isRent = index % 3 === 0; 
+        const formattedProperties: Property[] = data.map((prop) => {
           const p = prop as unknown as SupabaseProperty;
-          let simulatedPrice = p.price ?? 0;
-          
-          if (isRent && simulatedPrice > 10000) {
-            simulatedPrice = Math.floor(simulatedPrice / 500); // Convertimos millones a miles para renta
-          }
-
           return {
-            id: p.slug, // ID para lógica interna (favoritos)
+            id: p.id,
             slug: p.slug,
-            price: simulatedPrice,
-            location: p.location ?? "Ubicación no disponible",
+            price: p.price ?? 0,
+            location: p.address ?? "Ubicación no disponible",
             beds: p.beds ?? 0,
             baths: p.baths ?? 0,
             imageUrl: (Array.isArray(p.image_urls) && p.image_urls.length > 0) ? p.image_urls[0] : "/placeholder.jpg",
-            address: p.address,
-            type: isRent ? 'rent' : 'sale'
+            type: 'sale' as const,
           };
         });
         setAllProperties(formattedProperties);
@@ -84,7 +73,6 @@ export default function HomeDiscover() {
         allProperties.filter(
           (prop) =>
             prop.location?.toLowerCase().includes(lowerCaseQuery) ||
-            prop.address?.toLowerCase().includes(lowerCaseQuery) ||
             prop.id.toLowerCase().includes(lowerCaseQuery)
         )
       );
@@ -99,7 +87,6 @@ export default function HomeDiscover() {
       return;
     }
 
-    // Mapeo manual para asegurar que los slugs coincidan con las categorías
     const filters: Record<string, string[]> = {
       houses: ['villa', 'home', 'manor', 'cottage', 'estate', 'house'],
       apartments: ['apartment', 'condo', 'loft', 'studio'],

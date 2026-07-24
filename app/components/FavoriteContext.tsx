@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { createClient } from "@/lib/supabase/client";
 
 interface FavoriteContextType {
   favoriteIds: string[];
@@ -13,29 +14,65 @@ const FavoriteContext = React.createContext<FavoriteContextType | undefined>(und
 export function FavoriteProvider({ children }: { children: React.ReactNode }) {
   const [favoriteIds, setFavoriteIds] = React.useState<string[]>([]);
   const [isInitialized, setIsInitialized] = React.useState(false);
+  const [userId, setUserId] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    const saved = localStorage.getItem("favoritePropertyIds");
-    if (saved) {
-      try {
-        setFavoriteIds(JSON.parse(saved));
-      } catch (e) {
-        console.error("Error parsing favorites", e);
+    async function init() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+
+      if (user) {
+        setUserId(user.id)
+        const { data } = await supabase
+          .from('Favoritos')
+          .select('id_propiedad')
+          .eq('id_user', user.id)
+
+        if (data) {
+          setFavoriteIds(data.map(f => f.id_propiedad))
+        }
+      } else {
+        const saved = localStorage.getItem("favoritePropertyIds");
+        if (saved) {
+          try {
+            setFavoriteIds(JSON.parse(saved));
+          } catch (e) {
+            console.error("Error parsing favorites", e);
+          }
+        }
       }
+      setIsInitialized(true);
     }
-    setIsInitialized(true);
+    init();
   }, []);
 
   React.useEffect(() => {
-    if (isInitialized) {
+    if (isInitialized && !userId) {
       localStorage.setItem("favoritePropertyIds", JSON.stringify(favoriteIds));
     }
-  }, [favoriteIds, isInitialized]);
+  }, [favoriteIds, isInitialized, userId]);
 
-  const toggleFavorite = (id: string) => {
+  const toggleFavorite = async (id: string) => {
+    const isCurrentlyFavorite = favoriteIds.includes(id);
+
     setFavoriteIds((prev) =>
-      prev.includes(id) ? prev.filter((fav) => fav !== id) : [...prev, id]
+      isCurrentlyFavorite ? prev.filter((fav) => fav !== id) : [...prev, id]
     );
+
+    if (userId) {
+      const supabase = createClient()
+      if (isCurrentlyFavorite) {
+        await supabase
+          .from('Favoritos')
+          .delete()
+          .eq('id_user', userId)
+          .eq('id_propiedad', id)
+      } else {
+        await supabase
+          .from('Favoritos')
+          .insert({ id_user: userId, id_propiedad: id })
+      }
+    }
   };
 
   const isFavorite = (id: string) => favoriteIds.includes(id);

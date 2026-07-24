@@ -8,6 +8,6 @@ describe('LoginForm', () => {
     
     expect(screen.getByPlaceholderText(/email/i)).toBeInTheDocument()
     expect(screen.getByPlaceholderText(/password/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /login/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /iniciar sesión/i })).toBeInTheDocument()
   })
 })

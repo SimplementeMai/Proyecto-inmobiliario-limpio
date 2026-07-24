@@ -2,10 +2,13 @@ import * as React from "react"
 import { PropertyRow } from "./PropertyRow"
 
 interface Property {
+  id: string
+  slug: string
   title: string
-  location: string
+  address: string | null
   price: number
-  status: "Active" | "Pending"
+  id_estado: number | null
+  estado_descripcion: string | null
 }
 
 export function PropertyTable({ properties }: { properties: Property[] }) {
@@ -19,7 +22,7 @@ export function PropertyTable({ properties }: { properties: Property[] }) {
       </div>
       <div>
         {properties.map((property) => (
-          <PropertyRow key={property.title} property={property} />
+          <PropertyRow key={property.id} property={property} />
         ))}
       </div>
     </div>

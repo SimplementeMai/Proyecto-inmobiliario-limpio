@@ -29,7 +29,7 @@ export function RegistrationForm() {
     setError(null)
     const supabase = createClient()
     
-    const { error } = await supabase.auth.signUp({
+    const { data: authData, error } = await supabase.auth.signUp({
       email: data.email,
       password: data.password,
       options: {
@@ -42,7 +42,12 @@ export function RegistrationForm() {
     if (error) {
       setError(error.message)
       setIsLoading(false)
-    } else {
+    } else if (authData.user) {
+      await supabase.from('Clientes').insert({
+        nombre: data.fullName,
+        email: data.email,
+        user_id: authData.user.id,
+      })
       router.push("/dashboard")
       router.refresh()
     }

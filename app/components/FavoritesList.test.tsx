@@ -5,7 +5,7 @@ import { FavoriteProvider } from './FavoriteContext'
 
 describe('FavoritesList', () => {
   const mockProperties = [
-    { title: 'Luxury Apartment', price: 850000, imageUrl: '/prop1.jpg' },
+    { id: 'test-id-1', slug: 'luxury-apartment', title: 'Luxury Apartment', price: 850000, imageUrl: '/prop1.jpg' },
   ]
 
   it('renders list of favorites when items exist', () => {

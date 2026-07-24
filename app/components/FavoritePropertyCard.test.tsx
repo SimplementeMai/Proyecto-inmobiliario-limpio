@@ -5,6 +5,8 @@ import { FavoriteProvider } from './FavoriteContext'
 
 describe('FavoritePropertyCard', () => {
   const mockProperty = {
+    id: 'test-id-1',
+    slug: 'luxury-apartment',
     title: 'Luxury Apartment',
     price: 850000,
     imageUrl: '/prop1.jpg',

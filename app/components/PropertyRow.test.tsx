@@ -4,10 +4,13 @@ import { PropertyRow } from './PropertyRow'
 
 describe('PropertyRow', () => {
   const mockProperty = {
+    id: 'test-id-1',
+    slug: 'test-property',
     title: 'The Nordic Villa',
-    location: '12 Willow Creek Ln',
+    address: '12 Willow Creek Ln',
     price: 1250000,
-    status: 'Active' as const,
+    id_estado: 1,
+    estado_descripcion: 'Activo',
   }
 
   it('renders property row details correctly', () => {
@@ -16,6 +19,6 @@ describe('PropertyRow', () => {
     expect(screen.getByText('The Nordic Villa')).toBeInTheDocument()
     expect(screen.getByText('12 Willow Creek Ln')).toBeInTheDocument()
     expect(screen.getByText(/\$1.25M/i)).toBeInTheDocument()
-    expect(screen.getByText('Active')).toBeInTheDocument()
+    expect(screen.getByText('Activo')).toBeInTheDocument()
   })
 })

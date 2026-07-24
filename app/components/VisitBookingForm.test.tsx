@@ -4,9 +4,9 @@ import { VisitBookingForm } from './VisitBookingForm'
 
 describe('VisitBookingForm', () => {
   it('renders booking form fields', () => {
-    render(<VisitBookingForm propertyId="123" />)
+    render(<VisitBookingForm propertyId="test-slug" />)
     
     expect(screen.getByPlaceholderText(/your name/i)).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /book visit/i })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /agendar visita/i })).toBeInTheDocument()
   })
 })
