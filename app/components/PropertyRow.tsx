@@ -3,7 +3,8 @@ import { Badge } from "@/app/components/ui/badge"
 import { Button } from "@/app/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/app/components/ui/dialog"
 import { PropertyForm } from "@/conductor/tracks/add_edit_property_form/implementation/PropertyForm"
-import { Pencil, Trash2, ExternalLink } from "lucide-react"
+import { SellPropertyDialog } from "./SellPropertyDialog"
+import { Pencil, Trash2, ExternalLink, DollarSign } from "lucide-react"
 import Link from "next/link"
 
 interface Property {
@@ -19,6 +20,7 @@ interface Property {
 
 export function PropertyRow({ property, isOwner }: { property: Property; isOwner?: boolean }) {
   const [editOpen, setEditOpen] = React.useState(false)
+  const [sellOpen, setSellOpen] = React.useState(false)
   const [propertyData, setPropertyData] = React.useState<any>(null)
   const [loading, setLoading] = React.useState(false)
   const formattedPrice = `$${(property.price / 1000000).toFixed(2)}M`
@@ -54,6 +56,9 @@ export function PropertyRow({ property, isOwner }: { property: Property; isOwner
         </Link>
         {isOwner && (
           <>
+            <Button variant="outline" size="sm" onClick={() => setSellOpen(true)}>
+              <DollarSign className="h-4 w-4" />
+            </Button>
             <Button variant="outline" size="sm" onClick={openEdit}>
               <Pencil className="h-4 w-4" />
             </Button>
@@ -100,6 +105,13 @@ export function PropertyRow({ property, isOwner }: { property: Property; isOwner
           ) : null}
         </DialogContent>
       </Dialog>
+
+      <SellPropertyDialog
+        open={sellOpen}
+        onOpenChange={setSellOpen}
+        propertyId={property.id}
+        onSaved={() => window.location.reload()}
+      />
     </div>
   )
 }
