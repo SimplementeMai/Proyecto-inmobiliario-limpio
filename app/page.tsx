@@ -1,6 +1,6 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { HeroSearch } from "@/app/components/HeroSearch";
 import { CategorySelector } from "@/app/components/CategorySelector";
 import { PropertyCard } from "@/app/components/PropertyCard";
@@ -38,7 +38,6 @@ export default function HomeDiscover() {
 
   React.useEffect(() => {
     async function fetchProperties() {
-      const supabase = createClient();
       const { data, error } = await supabase.from('properties').select('*');
 
       if (error) {
@@ -76,6 +75,7 @@ export default function HomeDiscover() {
         allProperties.filter(
           (prop) =>
             prop.location?.toLowerCase().includes(lowerCaseQuery) ||
+            prop.title?.toLowerCase().includes(lowerCaseQuery) ||
             prop.id.toLowerCase().includes(lowerCaseQuery)
         )
       );

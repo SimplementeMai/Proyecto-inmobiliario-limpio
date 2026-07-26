@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { Loader2 } from "lucide-react"
 
 const securitySchema = z.object({
@@ -19,7 +19,6 @@ export function SecuritySettings() {
   const [isLoading, setIsLoading] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
-  const supabase = createClient()
 
   const { register, handleSubmit, formState: { errors }, reset } = useForm({
     resolver: zodResolver(securitySchema),

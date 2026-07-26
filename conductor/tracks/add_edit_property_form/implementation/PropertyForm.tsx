@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { Loader2, Upload, X } from "lucide-react"
 
 const formSchema = z.object({
@@ -78,7 +78,6 @@ export function PropertyForm({ propertyId, initialData, onSaved }: PropertyFormP
     setError(null)
     setSuccess(false)
 
-    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     const propertyData = {

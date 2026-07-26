@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { PropertyForm } from "@/conductor/tracks/add_edit_property_form/implementation/PropertyForm"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 
 export default function NuevaPropiedadPage() {
@@ -11,7 +11,6 @@ export default function NuevaPropiedadPage() {
 
   React.useEffect(() => {
     async function check() {
-      const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) { router.push("/auth"); return }
       setReady(true)

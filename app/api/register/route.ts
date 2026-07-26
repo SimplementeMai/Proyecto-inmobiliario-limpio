@@ -67,15 +67,11 @@ export async function POST(request: Request) {
       .maybeSingle()
 
     if (!existing) {
-      const { error: insertErr } = await supabase.from('clientes').insert({
+      await supabase.from('clientes').insert({
         nombre: fullName,
         email: email,
         user_id: user.id,
-        password: '',
       })
-      if (insertErr) {
-        console.error('Error inserting cliente:', insertErr.message)
-      }
     }
   }
 

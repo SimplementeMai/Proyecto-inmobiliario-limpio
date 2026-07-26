@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 
 interface FavoriteContextType {
   favoriteIds: string[];
@@ -18,7 +18,6 @@ export function FavoriteProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     async function init() {
-      const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
 
       if (user) {
@@ -60,7 +59,6 @@ export function FavoriteProvider({ children }: { children: React.ReactNode }) {
     );
 
     if (userId) {
-      const supabase = createClient()
       let error = null
       if (isCurrentlyFavorite) {
         const result = await supabase

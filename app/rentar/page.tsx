@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { PropertyCard } from "@/app/components/PropertyCard"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 
 interface Property {
   id: string
@@ -22,10 +22,11 @@ export default function RentarPage() {
 
   React.useEffect(() => {
     async function fetch() {
-      const supabase = createClient()
       const { data } = await supabase
         .from('properties')
-        .select('*')
+        .select('*, estados!inner(descripcion)')
+        .eq('tipo', 'renta')
+        .eq('estados.descripcion', 'Disponible')
         .order('created_at', { ascending: false })
 
       setProperties(data || [])

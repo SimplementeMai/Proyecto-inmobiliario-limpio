@@ -4,7 +4,7 @@ import * as React from "react"
 import { Button } from "@/app/components/ui/button"
 import { Badge } from "@/app/components/ui/badge"
 import { AgentesForm } from "@/app/components/AgentesForm"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 
@@ -22,7 +22,6 @@ export default function AgentesPage() {
   const router = useRouter()
 
   async function fetchData() {
-    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { router.push("/auth"); return }
 
@@ -35,7 +34,6 @@ export default function AgentesPage() {
 
   async function handleDelete(id: number) {
     if (!confirm("¿Eliminar este agente?")) return
-    const supabase = createClient()
     await supabase.from('agentes').delete().eq('id_agente', id)
     fetchData()
   }

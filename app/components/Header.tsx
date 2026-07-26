@@ -20,7 +20,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/app/components/ui/sheet"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { User as SupabaseUser } from "@supabase/supabase-js"
 
 const navLinks = [
@@ -34,25 +34,41 @@ const navLinks = [
 export function Header() {
   const pathname = usePathname()
   const [user, setUser] = React.useState<SupabaseUser | null>(null)
-  const supabase = createClient()
+  const [avatarUrl, setAvatarUrl] = React.useState<string | null>(null)
 
   React.useEffect(() => {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       setUser(user)
+      
+      if (user) {
+        const { data: cliente } = await supabase
+          .from('clientes')
+          .select('avatar_url')
+          .eq('user_id', user.id)
+          .maybeSingle()
+        
+        setAvatarUrl(cliente?.avatar_url || null)
+      }
     }
     fetchUser()
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
+      if (session?.user) {
+        // Optional: Trigger a refresh of the avatar here if needed
+      } else {
+        setAvatarUrl(null)
+      }
     })
 
     return () => subscription.unsubscribe()
-  }, [supabase.auth])
+  }, [])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
     setUser(null)
+    setAvatarUrl(null)
     window.location.href = "/" // Forzar recarga completa
   }
 
@@ -120,7 +136,7 @@ export function Header() {
               <Link href="/profile">
                 <Button variant="ghost" className="rounded-xl px-2 hover:bg-transparent">
                   <Avatar className="h-9 w-9 border-2 border-primary/10">
-                    <AvatarImage src={user.user_metadata?.avatar_url} />
+                    <AvatarImage src={avatarUrl || undefined} />
                     <AvatarFallback>{user.email?.substring(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </Button>

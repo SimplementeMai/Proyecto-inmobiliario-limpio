@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { UserProfileForm } from "./UserProfileForm"
 import { SecuritySettings } from "./SecuritySettings"
 import { ProfileAvatar } from "./ProfileAvatar"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { User } from "@supabase/supabase-js"
 
 interface Cliente {
@@ -20,7 +20,6 @@ export default function UserProfilePage() {
   const [cliente, setCliente] = useState<Cliente | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
-  const supabase = createClient()
 
   useEffect(() => {
     const getUser = async () => {
@@ -56,7 +55,7 @@ export default function UserProfilePage() {
       setLoading(false)
     }
     getUser()
-  }, [router, supabase.auth])
+  }, [router])
 
   if (loading) return <div className="container mx-auto px-4 py-12">Cargando...</div>
 
@@ -67,9 +66,10 @@ export default function UserProfilePage() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         <div className="md:col-span-1">
           <div className="bg-card p-6 rounded-xl border flex flex-col items-center shadow-sm">
-            <ProfileAvatar src={user?.user_metadata?.avatar_url} alt="Profile" />
-            <h2 className="mt-4 font-bold text-lg">{cliente?.nombre || user?.user_metadata?.full_name || "Usuario"}</h2>
-            <p className="text-muted-foreground text-sm">{user?.email}</p>
+          {console.log("Datos del cliente:", cliente)}
+          <ProfileAvatar src={cliente?.avatar_url || ""} alt="Profile" />
+          <h2 className="mt-4 font-bold text-lg">{cliente?.nombre || user?.user_metadata?.full_name || "Usuario"}</h2>
+          <p className="text-muted-foreground text-sm">{user?.email}</p>
           </div>
         </div>
 

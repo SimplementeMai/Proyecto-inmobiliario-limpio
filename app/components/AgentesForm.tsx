@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { Loader2 } from "lucide-react"
 
 const agenteSchema = z.object({
@@ -34,7 +34,6 @@ export function AgentesForm({ agente, onSaved, onCancel }: AgentesFormProps) {
   const onSubmit = async (data: z.infer<typeof agenteSchema>) => {
     setIsLoading(true)
     setError(null)
-    const supabase = createClient()
 
     let result
     if (agente) {

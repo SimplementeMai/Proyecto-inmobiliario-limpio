@@ -4,7 +4,7 @@ import * as React from "react"
 import { Button } from "@/app/components/ui/button"
 import { Badge } from "@/app/components/ui/badge"
 import { TransaccionesForm } from "@/app/components/TransaccionesForm"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { Plus, Pencil, Trash2 } from "lucide-react"
 
@@ -30,7 +30,6 @@ export default function TransaccionesPage() {
   const router = useRouter()
 
   async function fetchData() {
-    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { router.push("/auth"); return }
 
@@ -52,7 +51,6 @@ export default function TransaccionesPage() {
 
   async function handleDelete(id: number) {
     if (!confirm("¿Eliminar esta transacción?")) return
-    const supabase = createClient()
     await supabase.from('transacciones').delete().eq('id_transaccion', id)
     fetchData()
   }

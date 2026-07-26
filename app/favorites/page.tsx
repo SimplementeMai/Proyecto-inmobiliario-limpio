@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { FavoritesList } from "@/app/components/FavoritesList";
 import { useFavorites } from "@/app/components/FavoriteContext";
-import { createClient } from "@/lib/supabase/client";
+import { supabase } from "@/lib/supabase/client";
 import { Database } from "@/lib/supabase/database.types";
 
 type PropertyRow = Database['public']['Tables']['properties']['Row'];
@@ -29,7 +29,6 @@ export default function FavoritesPage() {
         return;
       }
 
-      const supabase = createClient();
       const { data, error } = await supabase
         .from('properties')
         .select('*');

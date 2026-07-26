@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Button } from "@/app/components/ui/button"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { ShoppingCart, Home } from "lucide-react"
 import { useRouter } from "next/navigation"
 
@@ -22,7 +22,6 @@ export function BuyRentButton({ propertyId, propertyUserId }: BuyRentButtonProps
 
   React.useEffect(() => {
     async function check() {
-      const supabase = createClient()
       const { data: { user } } = await supabase.auth.getUser()
       if (!user) return
       setUserId(user.id)
@@ -45,7 +44,6 @@ export function BuyRentButton({ propertyId, propertyUserId }: BuyRentButtonProps
             nombre: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
             email: user.email || '',
             user_id: user.id,
-            password: '',
           })
           .select('id_cliente')
           .single()
@@ -69,7 +67,6 @@ export function BuyRentButton({ propertyId, propertyUserId }: BuyRentButtonProps
   async function handleTransaction() {
     setLoading(true)
     setError(null)
-    const supabase = createClient()
 
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { router.push("/auth"); return }

@@ -7,13 +7,20 @@ import * as z from "zod"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
 import { CalendarPicker } from "./CalendarPicker"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { useRouter } from "next/navigation"
 import { Loader2 } from "lucide-react"
 
 const bookingSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  date: z.string().min(1, "Date is required"),
+  date: z.string().min(1, "Date is required").refine((date) => {
+    const selectedDate = new Date(date);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    return selectedDate >= today;
+  }, {
+    message: "La fecha no puede ser anterior a hoy",
+  }),
 })
 
 export function VisitBookingForm({ propertyId }: { propertyId: string }) {
@@ -30,12 +37,10 @@ export function VisitBookingForm({ propertyId }: { propertyId: string }) {
     setError(null)
     setSuccess(false)
 
-    const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
 
     if (!user) {
-      setError("Debes iniciar sesión para agendar una visita.")
-      setIsLoading(false)
+      router.push("/auth")
       return
     }
 
@@ -52,7 +57,6 @@ export function VisitBookingForm({ propertyId }: { propertyId: string }) {
           nombre: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
           email: user.email || '',
           user_id: user.id,
-          password: '',
         })
         .select('id_cliente')
         .single()
@@ -77,17 +81,10 @@ export function VisitBookingForm({ propertyId }: { propertyId: string }) {
       return
     }
 
-    const { data: estado } = await supabase
-      .from('estados')
-      .select('id_estado')
-      .ilike('descripcion', '%pendiente%')
-      .single()
-
-    const { error: insertError } = await supabase.from('transacciones').insert({
+    const { error: insertError } = await supabase.from('visitas').insert({
       id_propiedad: property.id,
       id_cliente: cliente.id_cliente,
-      id_estado: estado?.id_estado || null,
-      fecha: new Date(data.date).toISOString(),
+      fecha_hora: new Date(data.date).toISOString(),
     })
 
     if (insertError) {

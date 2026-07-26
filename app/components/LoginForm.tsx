@@ -7,7 +7,7 @@ import * as z from "zod"
 import { useRouter } from "next/navigation"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { Github, Loader2, Eye, EyeOff } from "lucide-react"
 
 const loginSchema = z.object({
@@ -27,7 +27,6 @@ export function LoginForm() {
   const onSubmit = async (data: z.infer<typeof loginSchema>) => {
     setIsLoading(true)
     setError(null)
-    const supabase = createClient()
     
     const { error } = await supabase.auth.signInWithPassword({
       email: data.email,
@@ -44,7 +43,6 @@ export function LoginForm() {
   }
 
   const handleGithubLogin = async () => {
-    const supabase = createClient()
     await supabase.auth.signInWithOAuth({
       provider: 'github',
       options: {

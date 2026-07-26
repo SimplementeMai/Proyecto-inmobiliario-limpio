@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import * as z from "zod"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 import { User } from "@supabase/supabase-js"
 import { Loader2 } from "lucide-react"
 
@@ -30,7 +30,7 @@ export function UserProfileForm({ user, cliente, onRefresh }: UserProfileFormPro
   const [isLoading, setIsLoading] = React.useState(false)
   const [success, setSuccess] = React.useState(false)
   const [error, setError] = React.useState<string | null>(null)
-  const supabase = createClient()
+  const [file, setFile] = React.useState<File | null>(null)
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: zodResolver(profileSchema),
@@ -45,6 +45,28 @@ export function UserProfileForm({ user, cliente, onRefresh }: UserProfileFormPro
     setError(null)
     setSuccess(false)
 
+    let avatarUrl = cliente?.avatar_url
+
+    if (file) {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${user?.id}-${Math.random()}.${fileExt}`
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(fileName, file)
+
+      if (uploadError) {
+        setError(uploadError.message)
+        setIsLoading(false)
+        return
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(fileName)
+      
+      avatarUrl = publicUrlData.publicUrl
+    }
+
     const { error: authError } = await supabase.auth.updateUser({
       data: { full_name: data.fullName },
     })
@@ -58,7 +80,7 @@ export function UserProfileForm({ user, cliente, onRefresh }: UserProfileFormPro
     if (cliente) {
       const { error: dbError } = await supabase
         .from('clientes')
-        .update({ nombre: data.fullName, email: data.email })
+        .update({ nombre: data.fullName, email: data.email, avatar_url: avatarUrl })
         .eq('id_cliente', cliente.id_cliente)
 
       if (dbError) {
@@ -75,6 +97,10 @@ export function UserProfileForm({ user, cliente, onRefresh }: UserProfileFormPro
 
   return (
     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <label className="text-sm font-medium mb-1 block">Foto de perfil</label>
+        <Input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+      </div>
       <div>
         <Input placeholder="Full Name" {...register("fullName")} />
         {errors.fullName && <p className="text-destructive text-sm mt-1">{errors.fullName.message as string}</p>}

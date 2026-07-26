@@ -5,7 +5,7 @@ import { Button } from "@/app/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/app/components/ui/dialog"
 import { PropertyForm } from "@/conductor/tracks/add_edit_property_form/implementation/PropertyForm"
 import { Pencil } from "lucide-react"
-import { createClient } from "@/lib/supabase/client"
+import { supabase } from "@/lib/supabase/client"
 
 interface EditPropertyButtonProps {
   propertyId: string
@@ -19,7 +19,6 @@ export function EditPropertyButton({ propertyId, propertyUserId }: EditPropertyB
   const [loading, setLoading] = React.useState(false)
 
   React.useEffect(() => {
-    const supabase = createClient()
     supabase.auth.getUser().then(({ data: { user } }) => {
       if (user) setUserId(user.id)
     })
@@ -32,7 +31,6 @@ export function EditPropertyButton({ propertyId, propertyUserId }: EditPropertyB
   async function openEdit() {
     setLoading(true)
     setOpen(true)
-    const supabase = createClient()
     const { data } = await supabase.from('properties').select('*').eq('id', propertyId).single()
     setPropertyData(data)
     setLoading(false)
