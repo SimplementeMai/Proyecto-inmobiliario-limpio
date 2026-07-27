@@ -28,8 +28,9 @@ export default function ClientesPage() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) { router.push("/auth"); return }
 
-    const { data } = await supabase.from('clientes').select('*').order('id_cliente')
-    setClientes(data || [])
+    const res = await fetch("/api/clientes")
+    const data = await res.json()
+    setClientes(Array.isArray(data) ? data : [])
     setLoading(false)
   }
 

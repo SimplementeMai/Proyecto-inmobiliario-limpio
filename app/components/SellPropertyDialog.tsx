@@ -28,10 +28,10 @@ export function SellPropertyDialog({ open, onOpenChange, propertyId, onSaved }: 
     if (!open) return
     async function fetchData() {
       const [cliRes, estRes] = await Promise.all([
-        supabase.from('clientes').select('id_cliente, nombre').order('nombre'),
+        fetch("/api/clientes").then(r => r.json()),
         supabase.from('estados').select('id_estado, descripcion').order('id_estado'),
       ])
-      setClientes(cliRes.data || [])
+      setClientes(Array.isArray(cliRes) ? cliRes : [])
       setEstados(estRes.data || [])
     }
     fetchData()
