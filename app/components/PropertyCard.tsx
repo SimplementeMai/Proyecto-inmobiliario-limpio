@@ -50,6 +50,9 @@ export function PropertyCard({ property, isFavorite = false, onToggleFavorite }:
                 src={property.imageUrl}
                 alt={property.location}
                 className="h-full w-full object-cover hover:scale-105 transition-transform duration-500"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect fill='%23f3f4f6' width='400' height='300'/%3E%3Ctext x='200' y='150' text-anchor='middle' fill='%239ca3af' font-size='16'%3EImagen no disponible%3C/text%3E%3C/svg%3E"
+                }}
               />
             </AspectRatio>
             <div className="absolute top-4 left-4">

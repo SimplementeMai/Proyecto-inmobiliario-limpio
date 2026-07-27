@@ -7,7 +7,7 @@ import * as z from "zod"
 import { Button } from "@/app/components/ui/button"
 import { Input } from "@/app/components/ui/input"
 import { supabase } from "@/lib/supabase/client"
-import { Loader2, Upload, X } from "lucide-react"
+import { Loader2, Upload, X, ImageIcon } from "lucide-react"
 
 const formSchema = z.object({
   title: z.string().min(1, "El título es obligatorio"),
@@ -43,6 +43,8 @@ export function PropertyForm({ propertyId, initialData, onSaved }: PropertyFormP
   const [success, setSuccess] = React.useState(false)
   const [imageUrls, setImageUrls] = React.useState<string[]>(initialData?.image_urls || [])
   const [newImageUrl, setNewImageUrl] = React.useState("")
+  const [uploading, setUploading] = React.useState(false)
+  const fileInputRef = React.useRef<HTMLInputElement>(null)
 
   const {
     register,
@@ -72,6 +74,42 @@ export function PropertyForm({ propertyId, initialData, onSaved }: PropertyFormP
 
   function removeImageUrl(index: number) {
     setImageUrls(imageUrls.filter((_, i) => i !== index))
+  }
+
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const files = e.target.files
+    if (!files || files.length === 0) return
+
+    setUploading(true)
+    setError(null)
+
+    for (const file of Array.from(files)) {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `property-${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('property-images')
+        .upload(fileName, file)
+
+      if (uploadError) {
+        setError(`Error al subir "${file.name}": ${uploadError.message}`)
+        setUploading(false)
+        return
+      }
+
+      const { data: urlData } = supabase.storage
+        .from('property-images')
+        .getPublicUrl(fileName)
+
+      if (urlData?.publicUrl) {
+        setImageUrls(prev => [...prev, urlData.publicUrl])
+      }
+    }
+
+    setUploading(false)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ""
+    }
   }
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
@@ -157,10 +195,34 @@ export function PropertyForm({ propertyId, initialData, onSaved }: PropertyFormP
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium">Imágenes (URLs)</label>
+        <label className="text-sm font-medium">Imágenes</label>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={handleFileUpload}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full gap-2"
+          disabled={uploading}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          {uploading ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <ImageIcon className="h-4 w-4" />
+          )}
+          {uploading ? "Subiendo imágenes..." : "Importar imágenes desde tu equipo"}
+        </Button>
+
         <div className="flex gap-2">
           <Input
-            placeholder="https://ejemplo.com/imagen.jpg"
+            placeholder="O pega una URL de imagen"
             value={newImageUrl}
             onChange={e => setNewImageUrl(e.target.value)}
             onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); addImageUrl() } }}
@@ -169,14 +231,27 @@ export function PropertyForm({ propertyId, initialData, onSaved }: PropertyFormP
             <Upload className="h-4 w-4" />
           </Button>
         </div>
+
         {imageUrls.length > 0 && (
-          <div className="space-y-2">
+          <div className="grid grid-cols-3 gap-2">
             {imageUrls.map((url, i) => (
-              <div key={i} className="flex items-center gap-2 text-sm">
-                <img src={url} alt="" className="h-10 w-10 rounded object-cover" />
-                <span className="truncate flex-1 text-muted-foreground">{url}</span>
-                <Button type="button" variant="ghost" size="sm" onClick={() => removeImageUrl(i)}>
-                  <X className="h-4 w-4" />
+              <div key={i} className="relative group">
+                <img
+                  src={url}
+                  alt=""
+                  className="h-24 w-full rounded-lg object-cover"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23ddd' width='100' height='100'/%3E%3Ctext x='50' y='55' text-anchor='middle' fill='%23999' font-size='12'%3EError%3C/text%3E%3C/svg%3E"
+                  }}
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  size="sm"
+                  className="absolute top-1 right-1 h-6 w-6 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={() => removeImageUrl(i)}
+                >
+                  <X className="h-3 w-3" />
                 </Button>
               </div>
             ))}

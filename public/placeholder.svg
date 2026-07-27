@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">
+  <rect fill="#f3f4f6" width="800" height="600"/>
+  <text x="400" y="290" text-anchor="middle" fill="#9ca3af" font-size="20" font-family="sans-serif">Sin imagen</text>
+  <text x="400" y="320" text-anchor="middle" fill="#d1d5db" font-size="14" font-family="sans-serif">Agrega una URL o sube un archivo</text>
+</svg>

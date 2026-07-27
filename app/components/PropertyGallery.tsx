@@ -4,6 +4,8 @@ import * as React from "react"
 import { AspectRatio } from "@/app/components/ui/aspect-ratio"
 import { Dialog, DialogContent, DialogTrigger } from "@/app/components/ui/dialog"
 
+const fallbackSrc = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600'%3E%3Crect fill='%23f3f4f6' width='800' height='600'/%3E%3Ctext x='400' y='300' text-anchor='middle' fill='%239ca3af' font-size='20'%3EImagen no disponible%3C/text%3E%3C/svg%3E"
+
 export function PropertyGallery({ images }: { images: string[] }) {
   return (
     <div className="grid grid-cols-2 gap-2">
@@ -16,6 +18,9 @@ export function PropertyGallery({ images }: { images: string[] }) {
                   src={src}
                   alt={`Property image ${index + 1}`}
                   className="h-full w-full object-cover rounded-xl hover:opacity-90 transition-opacity"
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = fallbackSrc
+                  }}
                 />
               </AspectRatio>
             </div>
@@ -25,6 +30,9 @@ export function PropertyGallery({ images }: { images: string[] }) {
               src={src}
               alt={`Property image ${index + 1} expanded`}
               className="w-full h-auto rounded-xl shadow-2xl"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = fallbackSrc
+              }}
             />
           </DialogContent>
         </Dialog>

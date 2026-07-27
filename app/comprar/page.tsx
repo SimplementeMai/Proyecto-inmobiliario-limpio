@@ -56,7 +56,7 @@ export default function ComprarPage() {
                 price: property.price,
                 location: property.address || "Sin ubicación",
                 imageUrl: (Array.isArray(property.image_urls) && property.image_urls.length > 0)
-                  ? property.image_urls[0] : "/placeholder.jpg",
+                  ? property.image_urls[0] : "/placeholder.svg",
                 beds: property.beds || 0,
                 baths: property.baths || 0,
               }}

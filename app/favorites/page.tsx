@@ -43,7 +43,7 @@ export default function FavoritesPage() {
           slug: p.slug,
           title: p.title || p.address || "Property",
           price: p.price || 0,
-          imageUrl: (Array.isArray(p.image_urls) && p.image_urls.length > 0) ? p.image_urls[0] : "/placeholder.jpg"
+          imageUrl: (Array.isArray(p.image_urls) && p.image_urls.length > 0) ? p.image_urls[0] : "/placeholder.svg"
         }));
         setProperties(formatted);
       }
