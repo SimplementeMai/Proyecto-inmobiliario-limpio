@@ -71,12 +71,48 @@ export function VisitBookingForm({ propertyId }: { propertyId: string }) {
 
     const { data: property } = await supabase
       .from('properties')
-      .select('id')
+      .select('id, user_id')
       .eq('slug', propertyId)
       .single()
 
     if (!property) {
       setError("No se encontró la propiedad.")
+      setIsLoading(false)
+      return
+    }
+
+    if (property.user_id === user.id) {
+      setError("No puedes agendar una visita en tu propia propiedad.")
+      setIsLoading(false)
+      return
+    }
+
+    // Check for existing active visits
+    console.log("Checking active visit for:", { propertyId: property.id, clientId: cliente.id_cliente });
+    const { data: activeVisit } = await supabase
+      .from('visitas')
+      .select('id_visita, estado')
+      .eq('id_propiedad', property.id)
+      .eq('id_cliente', cliente.id_cliente)
+      .not('estado', 'in', '("realizada","cancelada")')
+      .maybeSingle()
+
+    // Note: The above syntax is what was used. Let's try the correct array-based syntax for Supabase.
+    // If the above returned null, it might be that 'estado' is exactly equal to one of those, 
+    // or the 'in' operator syntax is incorrect. Let's use filter to be sure.
+    
+    // Actually, let's fetch all and filter client-side to be 100% sure we catch it.
+    const { data: allVisits } = await supabase
+      .from('visitas')
+      .select('id_visita, estado')
+      .eq('id_propiedad', property.id)
+      .eq('id_cliente', cliente.id_cliente)
+    
+    const activeVisitFound = allVisits?.find(v => v.estado !== 'realizada' && v.estado !== 'cancelada');
+    console.log("All visits for user/prop:", allVisits, "Active visit found:", activeVisitFound);
+    
+    if (activeVisitFound) {
+      setError("Ya tienes una visita activa para esta propiedad. Debes cancelarla o completar la anterior antes de agendar otra.")
       setIsLoading(false)
       return
     }

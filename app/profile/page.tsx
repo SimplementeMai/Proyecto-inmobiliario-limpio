@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation"
 import { UserProfileForm } from "./UserProfileForm"
 import { SecuritySettings } from "./SecuritySettings"
 import { ProfileAvatar } from "./ProfileAvatar"
+import { MisCitas } from "@/app/components/MisCitas"
+import { useAuth } from "@/app/components/AuthContext"
 import { supabase } from "@/lib/supabase/client"
-import { User } from "@supabase/supabase-js"
 
 interface Cliente {
   id_cliente: number
@@ -16,46 +17,46 @@ interface Cliente {
 }
 
 export default function UserProfilePage() {
-  const [user, setUser] = useState<User | null>(null)
+  const { user, loading: authLoading } = useAuth()
   const [cliente, setCliente] = useState<Cliente | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   useEffect(() => {
-    const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (!user) {
-        router.push("/auth")
-      } else {
-        setUser(user)
+    if (authLoading) return
 
-        let { data: clienteData } = await supabase
+    if (!user) {
+      router.push("/auth")
+      return
+    }
+
+    const getCliente = async () => {
+      let { data: clienteData } = await supabase
+        .from('clientes')
+        .select('*')
+        .eq('user_id', user.id)
+        .maybeSingle()
+
+      // Si no existe registro en clientes, crearlo
+      if (!clienteData) {
+        const { data: newCliente } = await supabase
           .from('clientes')
+          .insert({
+            nombre: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
+            email: user.email || '',
+            user_id: user.id,
+            password: '',
+          })
           .select('*')
-          .eq('user_id', user.id)
-          .maybeSingle()
-
-        // Si no existe registro en clientes, crearlo
-        if (!clienteData) {
-          const { data: newCliente } = await supabase
-            .from('clientes')
-            .insert({
-              nombre: user.user_metadata?.full_name || user.email?.split('@')[0] || 'Usuario',
-              email: user.email || '',
-              user_id: user.id,
-              password: '',
-            })
-            .select('*')
-            .single()
-          clienteData = newCliente
-        }
-
-        setCliente(clienteData)
+          .single()
+        clienteData = newCliente
       }
+
+      setCliente(clienteData)
       setLoading(false)
     }
-    getUser()
-  }, [router])
+    getCliente()
+  }, [user, authLoading, router])
 
   if (loading) return <div className="container mx-auto px-4 py-12">Cargando...</div>
 
@@ -87,6 +88,10 @@ export default function UserProfilePage() {
           <section className="bg-card p-6 rounded-xl border shadow-sm">
             <h2 className="text-xl font-bold mb-6">Configuración de Seguridad</h2>
             <SecuritySettings />
+          </section>
+
+          <section className="bg-card p-6 rounded-xl border shadow-sm">
+            <MisCitas />
           </section>
         </div>
       </div>

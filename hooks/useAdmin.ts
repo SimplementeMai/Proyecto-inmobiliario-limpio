@@ -1,21 +1,19 @@
 import { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase/client'
+import { useAuth } from '@/app/components/AuthContext'
 
 export function useAdmin() {
+  const { user, loading: authLoading } = useAuth()
   const [isAdmin, setIsAdmin] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    async function checkRole() {
-      const { data: { user } } = await supabase.auth.getUser()
-      
-      // Verificamos el rol guardado en la metadata del usuario
-      const role = user?.app_metadata?.role
-      setIsAdmin(role === 'admin')
-      setLoading(false)
-    }
-    checkRole()
-  }, [])
+    if (authLoading) return
+    
+    // Verificamos el rol guardado en la metadata del usuario
+    const role = user?.app_metadata?.role
+    setIsAdmin(role === 'admin')
+    setLoading(false)
+  }, [user, authLoading])
 
   return { isAdmin, loading }
 }

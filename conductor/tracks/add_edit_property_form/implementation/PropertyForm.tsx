@@ -14,6 +14,7 @@ const formSchema = z.object({
   slug: z.string().min(1, "El slug es obligatorio").regex(/^[a-z0-9-]+$/, "Solo minúsculas, números y guiones"),
   price: z.string().min(1, "El precio es obligatorio"),
   description: z.string().optional(),
+  tipo: z.enum(["venta", "renta"], { required_error: "Selecciona venta o renta" }),
   address: z.string().optional(),
   beds: z.string().optional(),
   baths: z.string().optional(),
@@ -85,6 +86,7 @@ export function PropertyForm({ propertyId, initialData, onSaved }: PropertyFormP
       slug: data.slug,
       price: Number(data.price),
       description: data.description || null,
+      tipo: data.tipo,
       address: data.address || null,
       beds: data.beds ? Number(data.beds) : null,
       baths: data.baths ? Number(data.baths) : null,
@@ -127,6 +129,17 @@ export function PropertyForm({ propertyId, initialData, onSaved }: PropertyFormP
       </div>
       <div>
         <Input placeholder="Descripción" {...register("description")} />
+      </div>
+      <div className="flex gap-4">
+        <label className="flex items-center gap-2">
+          <input type="radio" value="venta" {...register("tipo")} />
+          Venta
+        </label>
+        <label className="flex items-center gap-2">
+          <input type="radio" value="renta" {...register("tipo")} />
+          Renta
+        </label>
+        {errors.tipo && <p className="text-destructive text-sm mt-1">{errors.tipo.message as string}</p>}
       </div>
       <div>
         <Input placeholder="Dirección" {...register("address")} />

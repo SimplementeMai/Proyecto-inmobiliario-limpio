@@ -18,16 +18,24 @@ export function BuyRentButton({ propertyId, propertyUserId }: BuyRentButtonProps
   const [hasTransaction, setHasTransaction] = React.useState(false)
   const [isOwner, setIsOwner] = React.useState(false)
   const [userId, setUserId] = React.useState<string | null>(null)
+  const isChecking = React.useRef(false)
   const router = useRouter()
 
   React.useEffect(() => {
     async function check() {
+      if (isChecking.current) return
+      isChecking.current = true
+      
       const { data: { user } } = await supabase.auth.getUser()
-      if (!user) return
+      if (!user) {
+        isChecking.current = false
+        return
+      }
       setUserId(user.id)
 
       if (propertyUserId && propertyUserId === user.id) {
         setIsOwner(true)
+        isChecking.current = false
         return
       }
 
@@ -60,6 +68,7 @@ export function BuyRentButton({ propertyId, propertyUserId }: BuyRentButtonProps
 
         if (trans) setHasTransaction(true)
       }
+      isChecking.current = false
     }
     check()
   }, [propertyId, propertyUserId])

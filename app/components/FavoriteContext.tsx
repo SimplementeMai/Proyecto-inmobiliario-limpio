@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { supabase } from "@/lib/supabase/client";
+import { useAuth } from "./AuthContext";
 
 interface FavoriteContextType {
   favoriteIds: string[];
@@ -12,16 +13,15 @@ interface FavoriteContextType {
 const FavoriteContext = React.createContext<FavoriteContextType | undefined>(undefined);
 
 export function FavoriteProvider({ children }: { children: React.ReactNode }) {
+  const { user, loading: authLoading } = useAuth();
   const [favoriteIds, setFavoriteIds] = React.useState<string[]>([]);
   const [isInitialized, setIsInitialized] = React.useState(false);
-  const [userId, setUserId] = React.useState<string | null>(null);
-
+  
   React.useEffect(() => {
     async function init() {
-      const { data: { user } } = await supabase.auth.getUser()
+      if (authLoading) return;
 
       if (user) {
-        setUserId(user.id)
         const { data } = await supabase
           .from('favoritos')
           .select('id_propiedad')
@@ -43,13 +43,13 @@ export function FavoriteProvider({ children }: { children: React.ReactNode }) {
       setIsInitialized(true);
     }
     init();
-  }, []);
+  }, [user, authLoading]);
 
   React.useEffect(() => {
-    if (isInitialized && !userId) {
+    if (isInitialized && !user) {
       localStorage.setItem("favoritePropertyIds", JSON.stringify(favoriteIds));
     }
-  }, [favoriteIds, isInitialized, userId]);
+  }, [favoriteIds, isInitialized, user]);
 
   const toggleFavorite = async (id: string) => {
     const isCurrentlyFavorite = favoriteIds.includes(id);
@@ -58,19 +58,19 @@ export function FavoriteProvider({ children }: { children: React.ReactNode }) {
       isCurrentlyFavorite ? prev.filter((fav) => fav !== id) : [...prev, id]
     );
 
-    if (userId) {
+    if (user) {
       let error = null
       if (isCurrentlyFavorite) {
         const result = await supabase
           .from('favoritos')
           .delete()
-          .eq('id_user', userId)
+          .eq('id_user', user.id)
           .eq('id_propiedad', id)
         error = result.error
       } else {
         const result = await supabase
           .from('favoritos')
-          .insert({ id_user: userId, id_propiedad: id })
+          .insert({ id_user: user.id, id_propiedad: id })
         error = result.error
       }
       if (error) {

@@ -6,6 +6,7 @@ import { PropertyForm } from "@/conductor/tracks/add_edit_property_form/implemen
 import { SellPropertyDialog } from "./SellPropertyDialog"
 import { Pencil, Trash2, ExternalLink, DollarSign } from "lucide-react"
 import Link from "next/link"
+import { supabase } from "@/lib/supabase/client"
 
 interface Property {
   id: string
@@ -29,8 +30,6 @@ export function PropertyRow({ property, isOwner }: { property: Property; isOwner
   async function openEdit() {
     setLoading(true)
     setEditOpen(true)
-    const { createClient } = await import("@/lib/supabase/client")
-    const supabase = createClient()
     const { data } = await supabase.from('properties').select('*').eq('id', property.id).single()
     setPropertyData(data)
     setLoading(false)
@@ -64,8 +63,6 @@ export function PropertyRow({ property, isOwner }: { property: Property; isOwner
             </Button>
             <Button variant="outline" size="sm" onClick={async () => {
               if (confirm("¿Eliminar esta propiedad?")) {
-                const { createClient } = await import("@/lib/supabase/client")
-                const supabase = createClient()
                 await supabase.from('properties').delete().eq('id', property.id)
                 window.location.reload()
               }

@@ -24,9 +24,9 @@ export default function RentarPage() {
     async function fetch() {
       const { data } = await supabase
         .from('properties')
-        .select('*, estados!inner(descripcion)')
+        .select('*, estados!properties_id_estado_fkey!inner(descripcion)')
         .eq('tipo', 'renta')
-        .eq('estados.descripcion', 'Disponible')
+        .ilike('estados.descripcion', 'Disponible')
         .order('created_at', { ascending: false })
 
       setProperties(data || [])

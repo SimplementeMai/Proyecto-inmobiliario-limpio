@@ -22,13 +22,14 @@ export default function ComprarPage() {
 
   React.useEffect(() => {
     async function fetch() {
-      const { data } = await supabase
+      const { data, error } = await supabase
         .from('properties')
-        .select('*, estados!inner(descripcion)')
+        .select('*, estados!properties_id_estado_fkey!inner(descripcion)')
         .eq('tipo', 'venta')
-        .eq('estados.descripcion', 'Disponible')
+        .ilike('estados.descripcion', 'Disponible')
         .order('created_at', { ascending: false })
 
+      console.log('Query result:', { data, error })
       setProperties(data || [])
       setLoading(false)
     }

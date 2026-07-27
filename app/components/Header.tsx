@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Search, Bell, Menu, HelpCircle, LogOut, User } from "lucide-react"
+import { Menu, LogOut } from "lucide-react"
 import { cn } from "@/lib/utils"
 import {
   NavigationMenu,
@@ -16,12 +16,10 @@ import { Button } from "@/app/components/ui/button"
 import {
   Sheet,
   SheetContent,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/app/components/ui/sheet"
 import { supabase } from "@/lib/supabase/client"
-import { User as SupabaseUser } from "@supabase/supabase-js"
+import { useAuth } from "./AuthContext"
 
 const navLinks = [
   { href: "/", label: "Inicio" },
@@ -33,14 +31,11 @@ const navLinks = [
 
 export function Header() {
   const pathname = usePathname()
-  const [user, setUser] = React.useState<SupabaseUser | null>(null)
+  const { user } = useAuth()
   const [avatarUrl, setAvatarUrl] = React.useState<string | null>(null)
 
   React.useEffect(() => {
-    const fetchUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      setUser(user)
-      
+    const fetchAvatar = async () => {
       if (user) {
         const { data: cliente } = await supabase
           .from('clientes')
@@ -49,26 +44,15 @@ export function Header() {
           .maybeSingle()
         
         setAvatarUrl(cliente?.avatar_url || null)
-      }
-    }
-    fetchUser()
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
-      if (session?.user) {
-        // Optional: Trigger a refresh of the avatar here if needed
       } else {
         setAvatarUrl(null)
       }
-    })
-
-    return () => subscription.unsubscribe()
-  }, [])
+    }
+    fetchAvatar()
+  }, [user])
 
   const handleSignOut = async () => {
     await supabase.auth.signOut()
-    setUser(null)
-    setAvatarUrl(null)
     window.location.href = "/" // Forzar recarga completa
   }
 
